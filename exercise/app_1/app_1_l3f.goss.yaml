@@ -1,0 +1,11 @@
+---
+command:
+
+{{$ping_targets := append .Vars.ping_from_inet.targets .Env.S1C_ADDR}}
+{{range $target := $ping_targets}}
+  ip netns exec inet ping -w1 -c3 {{$target}}:
+    title: fail ping from inet to {{$target}}
+    exit-status: 1
+    stdout:
+      - "/0 received/"
+{{end}}

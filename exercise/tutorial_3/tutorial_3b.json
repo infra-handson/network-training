@@ -1,0 +1,120 @@
+{
+  "nodes": [
+    {
+      "name": "ha",
+      "type": "host",
+      "interfaces": [
+        {
+          "name": "ha-eth0",
+          "type": "l2",
+          "sub_interfaces": [
+            {
+              "ip_addr": "192.168.0.1/24",
+              "vlan": 10,
+              "_parent_name_": "ha-eth0"
+            },
+            {
+              "ip_addr": "172.16.0.1/24",
+              "vlan": 20,
+              "_parent_name_": "ha-eth0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "hb",
+      "type": "host",
+      "interfaces": [
+        {
+          "name": "hb-eth0",
+          "type": "l3",
+          "ip_addr": "192.168.0.2/24"
+        }
+      ]
+    },
+    {
+      "name": "hc",
+      "type": "host",
+      "interfaces": [
+        {
+          "name": "hc-eth0",
+          "type": "l3",
+          "ip_addr": "172.16.0.2/24"
+        }
+      ]
+    },
+    {
+      "name": "sw1",
+      "type": "switch",
+      "interfaces": [
+        {
+          "name": "sw1-eth0",
+          "type": "l2",
+          "trunk_vlans": [
+            10,
+            20
+          ]
+        },
+        {
+          "name": "sw1-eth1",
+          "type": "l2",
+          "trunk_vlans": [
+            10,
+            20
+          ]
+        }
+      ]
+    },
+    {
+      "name": "sw2",
+      "type": "switch",
+      "interfaces": [
+        {
+          "name": "sw2-eth0",
+          "type": "l2",
+          "trunk_vlans": [
+            10,
+            20
+          ]
+        },
+        {
+          "name": "sw2-eth1",
+          "type": "l2",
+          "access_vlan": 10
+        },
+        {
+          "name": "sw2-eth2",
+          "type": "l2",
+          "access_vlan": 20
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "node1": "ha",
+      "intf1": "ha-eth0",
+      "node2": "sw1",
+      "intf2": "sw1-eth1"
+    },
+    {
+      "node1": "sw1",
+      "intf1": "sw1-eth0",
+      "node2": "sw2",
+      "intf2": "sw2-eth0"
+    },
+    {
+      "node1": "hb",
+      "intf1": "hb-eth0",
+      "node2": "sw2",
+      "intf2": "sw2-eth1"
+    },
+    {
+      "node1": "hc",
+      "intf1": "hc-eth0",
+      "node2": "sw2",
+      "intf2": "sw2-eth2"
+    }
+  ]
+}

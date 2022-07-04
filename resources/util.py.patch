@@ -1,0 +1,25 @@
+--- /usr/lib/python2.7/dist-packages/mininet/util.py.orig       2021-05-16 00:44:27.579785365 +0900
++++ /usr/lib/python2.7/dist-packages/mininet/util.py    2021-05-16 00:46:11.849688449 +0900
+@@ -11,6 +11,7 @@
+ from os import O_NONBLOCK
+ import os
+ from functools import partial
++import shlex
+
+ # Command execution support
+
+@@ -73,11 +74,10 @@
+     if len( cmd ) == 1:
+         cmd = cmd[ 0 ]
+     # Allow passing in a list or a string
+-    if isinstance( cmd, str ) and not shell:
+-        cmd = cmd.split( ' ' )
+-        cmd = [ str( arg ) for arg in cmd ]
+-    elif isinstance( cmd, list ) and shell:
++    if isinstance( cmd, list ) and shell:
+         cmd = " ".join( arg for arg in cmd )
++    elif not shell:
++        cmd = shlex.split(cmd)
+     debug( '*** errRun:', cmd, '\n' )
+     popen = Popen( cmd, stdout=PIPE, stderr=stderr, shell=shell )
+     # We use poll() because select() doesn't work with large fd numbers,

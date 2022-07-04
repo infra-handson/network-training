@@ -1,0 +1,10 @@
+.env
+.idea
+.vscode
+__pycache__
+*.pyc
+*.pcap
+node_modules/
+*.pdf
+*.log
+*.swp

@@ -1,0 +1,23 @@
+---
+command:
+  # from inet to external web (s0a)
+  ip netns exec inet ping -W1 -c3 172.16.0.66:
+    title: ping from inet to s0a
+    exit-status: 0
+
+  ip netns exec inet curl -m 1 172.16.0.66:80:
+    title: http-access from inet to (s0a)
+    timeout: 2000 # curl -n 1 means 1sec timeout
+    exit-status: 0
+    stdout:
+      - "/- http/"
+
+{{$ping_sources := .Vars.ping.sources}}
+{{$ping_targets := append .Vars.ping.targets .Env.S1C_ADDR}}
+{{range $src := $ping_sources}}
+  {{range $target := $ping_targets}}
+  ip netns exec {{$src}} ping -W1 -c3 {{$target}}:
+    title: success ping from {{$src}} to {{$target}}
+    exit-status: 0
+  {{end}}
+{{end}}

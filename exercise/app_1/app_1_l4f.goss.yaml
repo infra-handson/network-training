@@ -1,0 +1,22 @@
+---
+command:
+
+{{$web_targets := append .Vars.web_from_inet.targets .Env.S1C_ADDR}}
+{{range $target := $web_targets}}
+  ip netns exec inet curl -m 1 {{$target}}:
+    title: fail web-access from inet to {{$target}}
+    exit-status:
+      not: 0
+{{end}}
+
+{{$ssh_sources := .Vars.ssh.sources}}
+{{$s1c_ssh := print .Env.S1C_ADDR ":22"}}
+{{$ssh_targets := append .Vars.ssh.targets $s1c_ssh}}
+{{range $src := $ssh_sources}}
+  {{range $target := $ssh_targets}}
+  ip netns exec {{$src}} curl -m 1 {{$target}}:
+    title: fail ssh-access from {{$src}} to {{$target}}
+    exit-status:
+      not: 0
+  {{end}}
+{{end}}

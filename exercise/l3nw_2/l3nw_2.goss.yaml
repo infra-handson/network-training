@@ -1,0 +1,15 @@
+---
+command:
+{{$cnt := .Vars.ping.count}}
+{{range .Vars.ping.targets}}
+  ip netns exec ha ping -c{{$cnt}} {{.}}:
+    title: ping from ha to {{.}} will be SUCCESS
+    exit-status: 0
+    stdout:
+      - "/{{$cnt}} packets transmitted, {{$cnt}} received/"
+{{end}}
+  ip netns exec ha ip route:
+    title: Do not use network-address of inet segment directly
+    exit-status: 0
+    stdout:
+      - "!/203\\.0\\.113\\.\\d+/"

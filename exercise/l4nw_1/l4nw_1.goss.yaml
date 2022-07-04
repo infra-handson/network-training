@@ -1,0 +1,14 @@
+---
+command:
+{{$sources := .Vars.curl.sources}}
+{{$targets := .Vars.curl.targets}}
+{{range $src := $sources}}
+  {{range $url := $targets}}
+    ip netns exec {{$src}} curl -m 1 {{$url}}:
+      title: curl from {{$src}} to {{$url}}
+      timeout: 2000 # curl -n 1 means 1sec timeout
+      exit-status: 0
+      stdout:
+        - "/Server.A[12]/"
+  {{end}}
+{{end}}

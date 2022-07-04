@@ -1,0 +1,27 @@
+---
+command:
+{{$web_sources := .Vars.web.sources}}
+{{$s1c_web := print .Env.S1C_ADDR ":8000"}}
+{{$web_targets := append .Vars.web.targets $s1c_web}}
+{{range $src := $web_sources}}
+  {{range $target := $web_targets}}
+  ip netns exec {{$src}} curl -m 1 {{$target}}:
+    title: success web-access from {{$src}} to {{$target}}
+    exit-status: 0
+    stdout:
+      - "/- http/"
+  {{end}}
+{{end}}
+
+{{$ssh_sources := .Vars.ssh.sources}}
+{{$s1c_ssh := print .Env.S1C_ADDR ":22"}}
+{{$ssh_targets := append .Vars.ssh.targets $s1c_ssh}}
+{{range $src := $ssh_sources}}
+  {{range $target := $ssh_targets}}
+  ip netns exec {{$src}} curl -m 1 {{$target}}:
+    title: success ssh-access from {{$src}} to {{$target}}
+    exit-status: 0
+    stdout:
+      - "/- ssh/"
+  {{end}}
+{{end}}

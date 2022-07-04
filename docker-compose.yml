@@ -1,0 +1,24 @@
+version: "3.4"
+services:
+  lab:
+    # build:
+    #   context: .
+    #   target: baseimage
+    image: ghcr.io/infra-handson/network-training:latest
+    hostname: nwtraining01
+    volumes:
+      - ./exercise:/exercise # for developoment & hands-on with online-vscode
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /lib/modules:/lib/modules
+    privileged: true
+    environment:
+      TERM: screen-256color
+      TZ: Asia/Tokyo
+      # DISPLAY: $DISPLAY
+    network_mode: host
+    restart: always # for hands-on instance
+    deploy:
+      resources:
+        limits:
+          cpus: '0.20'
+          memory: 256M

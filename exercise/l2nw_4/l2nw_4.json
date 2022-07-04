@@ -1,0 +1,150 @@
+{
+  "nodes": [
+    {
+      "name": "ha",
+      "type": "host",
+      "interfaces": [
+        {
+          "name": "ha-eth0",
+          "type": "l3",
+          "ip_addr": "192.168.0.1/24"
+        }
+      ],
+      "routes": [
+        {
+          "dst_net": "default",
+          "next_hop": "192.168.0.254"
+        }
+      ]
+    },
+    {
+      "name": "hb",
+      "type": "host",
+      "interfaces": [
+        {
+          "name": "hb-eth0",
+          "type": "l3",
+          "ip_addr": "192.168.0.2/24"
+        }
+      ]
+    },
+    {
+      "name": "hc",
+      "type": "host",
+      "interfaces": [
+        {
+          "name": "hc-eth0",
+          "type": "l3",
+          "ip_addr": "192.168.0.193/26"
+        }
+      ]
+    },
+    {
+      "name": "hd",
+      "type": "host",
+      "interfaces": [
+        {
+          "name": "hd-eth0",
+          "type": "l3",
+          "ip_addr": "192.168.0.129/25"
+        }
+      ],
+      "routes": [
+        {
+          "dst_net": "default",
+          "next_hop": "192.168.0.254"
+        }
+      ]
+    },
+    {
+      "name": "he",
+      "type": "host",
+      "interfaces": [
+        {
+          "name": "he-eth0",
+          "type": "l3",
+          "ip_addr": "192.168.0.130/25"
+        }
+      ]
+    },
+    {
+      "name": "sw1",
+      "type": "switch",
+      "interfaces": [
+        {
+          "name": "sw1-eth1",
+          "type": "l2"
+        },
+        {
+          "name": "sw1-eth2",
+          "type": "l2"
+        },
+        {
+          "name": "sw1-eth3",
+          "type": "l2"
+        },
+        {
+          "name": "sw1-eth4",
+          "type": "l2"
+        },
+        {
+          "name": "sw1-eth5",
+          "type": "l2"
+        },
+        {
+          "name": "sw1-eth10",
+          "type": "l2"
+        }
+      ]
+    },
+    {
+      "name": "ra",
+      "type": "router",
+      "interfaces": [
+        {
+          "name": "ra-eth0",
+          "type": "l3",
+          "ip_addr": "192.168.0.254/24"
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "node1": "ha",
+      "intf1": "ha-eth0",
+      "node2": "sw1",
+      "intf2": "sw1-eth1"
+    },
+    {
+      "node1": "hb",
+      "intf1": "hb-eth0",
+      "node2": "sw1",
+      "intf2": "sw1-eth2"
+    },
+    {
+      "node1": "hc",
+      "intf1": "hc-eth0",
+      "node2": "sw1",
+      "intf2": "sw1-eth3"
+    },
+    {
+      "node1": "hd",
+      "intf1": "hd-eth0",
+      "node2": "sw1",
+      "intf2": "sw1-eth4"
+    },
+    {
+      "node1": "he",
+      "intf1": "he-eth0",
+      "node2": "sw1",
+      "intf2": "sw1-eth5"
+    },
+    {
+      "node1": "ra",
+      "intf1": "ra-eth0",
+      "node2": "sw1",
+      "intf2": "sw1-eth10"
+    }
+  ]
+}

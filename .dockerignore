@@ -1,0 +1,7 @@
+**/pcaps
+**/*.pcap
+
+**/__pycache__
+**/*.pyc
+**/*.pyo
+**/*.pyd

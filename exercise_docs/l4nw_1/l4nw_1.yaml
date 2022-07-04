@@ -1,0 +1,127 @@
+---
+nodes:
+  - name: sa1
+    type: host
+    routes:
+      - dst_net: default
+        next_hop: 192.168.0.1
+        note: default to Router.B
+    svc_procs:
+      - python3 -m http.server 8080 -d /exercise/l4nw_1/docroot-sa1 &
+    interfaces:
+      - ip_addr: 192.168.0.2/30
+        name: sa1-eth0
+        type: l3
+      - ip_addr: 192.168.0.10/30
+        name: sa1-eth1
+        type: l3
+  - name: sa2
+    type: host
+    routes:
+      - dst_net: default
+        next_hop: 192.168.0.5
+        note: default to Router.B
+      - dst_net: 192.168.0.24/30
+        next_hop: 192.168.0.13
+        note: to hc, avoid asymmetric routing
+    svc_procs:
+      - >-
+        python3 -m http.server 8080 -d /exercise/l4nw_1/docroot-sa2
+        --bind 192.168.0.6 &
+    interfaces:
+      - ip_addr: 192.168.0.6/30
+        name: sa2-eth0
+        type: l3
+      - ip_addr: 192.168.0.14/30
+        name: sa2-eth1
+        type: l3
+  - name: hb
+    type: host
+    routes:
+      - dst_net: default
+        next_hop: 192.168.0.17
+        note: default to Router.B
+    interfaces:
+      - ip_addr: 192.168.0.18/30
+        name: hb-eth0
+        type: l3
+  - name: hc
+    type: host
+    routes:
+      - dst_net: default
+        next_hop: 192.168.0.25
+        note: default to Router.C
+    interfaces:
+      - ip_addr: 192.168.0.26/30
+        name: hc-eth0
+        type: l3
+  - name: rb
+    type: router
+    routes:
+      - dst_net: default
+        next_hop: 192.168.0.22
+        note: default to Router.C
+    interfaces:
+      - ip_addr: 192.168.0.21/30
+        name: rb-eth0
+        type: l3
+      - ip_addr: 192.168.0.17/30
+        name: rb-eth1
+        type: l3
+      - ip_addr: 192.168.0.1/30
+        name: rb-eth2
+        type: l3
+      - ip_addr: 192.168.0.5/30
+        name: rb-eth3
+        type: l3
+  - name: rc
+    type: router
+    routes:
+      - dst_net: 192.168.0.0/30
+        next_hop: 192.168.0.21
+        note: to q1 to Router.B
+      - dst_net: 192.168.0.16/30
+        next_hop: 192.168.0.21
+        note: to NW.B to Router.B
+    interfaces:
+      - ip_addr: 192.168.0.22/30
+        name: rc-eth0
+        type: l3
+      - ip_addr: 192.168.0.9/30
+        name: rc-eth1
+        type: l3
+      - ip_addr: 192.168.0.13/30
+        name: rc-eth2
+        type: l3
+      - ip_addr: 192.168.0.25/30
+        name: rc-eth3
+        type: l3
+links:
+  - intf1: sa1-eth0
+    intf2: rb-eth2
+    node1: sa1
+    node2: rb
+  - intf1: rb-eth3
+    intf2: sa2-eth0
+    node1: rb
+    node2: sa2
+  - intf1: sa1-eth1
+    intf2: rc-eth1
+    node1: sa1
+    node2: rc
+  - intf1: rc-eth2
+    intf2: sa2-eth1
+    node1: rc
+    node2: sa2
+  - intf1: hb-eth0
+    intf2: rb-eth1
+    node1: hb
+    node2: rb
+  - intf1: rb-eth0
+    intf2: rc-eth0
+    node1: rb
+    node2: rc
+  - intf1: rc-eth3
+    intf2: hc-eth0
+    node1: rc
+    node2: hc

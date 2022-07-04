@@ -1,0 +1,312 @@
+{
+  "nodes": [
+    {
+      "name": "ha",
+      "type": "host",
+      "interfaces": [
+        {
+          "name": "ha-eth0",
+          "type": "l3",
+          "ip_addr": "172.16.0.10/25"
+        }
+      ],
+      "routes": [
+        {
+          "dst_net": "default",
+          "next_hop": "172.16.0.1"
+        }
+      ]
+    },
+    {
+      "name": "ra",
+      "type": "router",
+      "interfaces": [
+        {
+          "name": "ra-eth0",
+          "type": "l3",
+          "ip_addr": "192.168.0.34/30"
+        },
+        {
+          "name": "ra-eth1",
+          "type": "l3",
+          "ip_addr": "192.168.0.38/30"
+        },
+        {
+          "name": "ra-eth2",
+          "type": "l3",
+          "ip_addr": "172.16.0.1/25"
+        }
+      ],
+      "routes": [
+        {
+          "dst_net": "default",
+          "next_hop": "192.168.0.37",
+          "note": "default to Router.C"
+        },
+        {
+          "dst_net": "192.168.1.0/25",
+          "next_hop": "192.168.0.33",
+          "note": "1st harlf of 192.168.1.0/24 to Router.B"
+        }
+      ]
+    },
+    {
+      "name": "rb",
+      "type": "router",
+      "interfaces": [
+        {
+          "name": "rb-eth3",
+          "type": "l3",
+          "ip_addr": "192.168.1.1/24"
+        },
+        {
+          "name": "rb-eth4",
+          "type": "l3",
+          "ip_addr": "192.168.0.33/30"
+        }
+      ],
+      "routes": [
+        {
+          "dst_net": "default",
+          "next_hop": "192.168.0.34"
+        }
+      ]
+    },
+    {
+      "name": "swb",
+      "type": "switch",
+      "interfaces": [
+        {
+          "name": "swb-eth0",
+          "type": "l2"
+        },
+        {
+          "name": "swb-eth1",
+          "type": "l2"
+        },
+        {
+          "name": "swb-eth2",
+          "type": "l2"
+        },
+        {
+          "name": "swb-eth3",
+          "type": "l2"
+        }
+      ]
+    },
+    {
+      "name": "sb1",
+      "type": "host",
+      "interfaces": [
+        {
+          "name": "sb1-eth0",
+          "type": "l3",
+          "ip_addr": "192.168.1.20/24"
+        }
+      ],
+      "routes": [
+        {
+          "dst_net": "default",
+          "next_hop": "192.168.1.1"
+        }
+      ]
+    },
+    {
+      "name": "sb2",
+      "type": "host",
+      "interfaces": [
+        {
+          "name": "sb2-eth0",
+          "type": "l3",
+          "ip_addr": "192.168.1.200/24"
+        }
+      ],
+      "routes": [
+        {
+          "dst_net": "default",
+          "next_hop": "192.168.1.1"
+        }
+      ]
+    },
+    {
+      "name": "sb3",
+      "type": "host",
+      "interfaces": [
+        {
+          "name": "sb3-eth0",
+          "type": "l3",
+          "ip_addr": "192.168.1.25/24"
+        }
+      ],
+      "routes": [
+        {
+          "dst_net": "default",
+          "next_hop": "192.168.1.1"
+        }
+      ]
+    },
+    {
+      "name": "rc",
+      "type": "router",
+      "interfaces": [
+        {
+          "name": "rc-eth2",
+          "type": "l3",
+          "ip_addr": "192.168.1.1/24"
+        },
+        {
+          "name": "rc-eth3",
+          "type": "l3",
+          "ip_addr": "192.168.0.37/30"
+        }
+      ],
+      "routes": [
+        {
+          "dst_net": "default",
+          "next_hop": "192.168.0.38"
+        }
+      ]
+    },
+    {
+      "name": "swc",
+      "type": "switch",
+      "interfaces": [
+        {
+          "name": "swc-eth0",
+          "type": "l2"
+        },
+        {
+          "name": "swc-eth1",
+          "type": "l2"
+        },
+        {
+          "name": "swc-eth2",
+          "type": "l2"
+        },
+        {
+          "name": "swc-eth3",
+          "type": "l2"
+        }
+      ]
+    },
+    {
+      "name": "sc1",
+      "type": "host",
+      "interfaces": [
+        {
+          "name": "sc1-eth0",
+          "type": "l3",
+          "ip_addr": "192.168.1.20/24"
+        }
+      ],
+      "routes": [
+        {
+          "dst_net": "default",
+          "next_hop": "192.168.1.1"
+        }
+      ]
+    },
+    {
+      "name": "sc2",
+      "type": "host",
+      "interfaces": [
+        {
+          "name": "sc2-eth0",
+          "type": "l3",
+          "ip_addr": "192.168.1.200/24"
+        }
+      ],
+      "routes": [
+        {
+          "dst_net": "default",
+          "next_hop": "192.168.1.1"
+        }
+      ]
+    },
+    {
+      "name": "sc3",
+      "type": "host",
+      "interfaces": [
+        {
+          "name": "sc3-eth0",
+          "type": "l3",
+          "ip_addr": "192.168.1.50/24"
+        }
+      ],
+      "routes": [
+        {
+          "dst_net": "default",
+          "next_hop": "192.168.1.1"
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "node1": "sb1",
+      "intf1": "sb1-eth0",
+      "node2": "swb",
+      "intf2": "swb-eth1"
+    },
+    {
+      "node1": "sb2",
+      "intf1": "sb2-eth0",
+      "node2": "swb",
+      "intf2": "swb-eth2"
+    },
+    {
+      "node1": "sb3",
+      "intf1": "sb3-eth0",
+      "node2": "swb",
+      "intf2": "swb-eth3"
+    },
+    {
+      "node1": "swb",
+      "intf1": "swb-eth0",
+      "node2": "rb",
+      "intf2": "rb-eth3"
+    },
+    {
+      "node1": "rb",
+      "intf1": "rb-eth4",
+      "node2": "ra",
+      "intf2": "ra-eth0"
+    },
+    {
+      "node1": "ra",
+      "intf1": "ra-eth2",
+      "node2": "ha",
+      "intf2": "ha-eth0"
+    },
+    {
+      "node1": "ra",
+      "intf1": "ra-eth1",
+      "node2": "rc",
+      "intf2": "rc-eth3"
+    },
+    {
+      "node1": "rc",
+      "intf1": "rc-eth2",
+      "node2": "swc",
+      "intf2": "swc-eth0"
+    },
+    {
+      "node1": "swc",
+      "intf1": "swc-eth1",
+      "node2": "sc1",
+      "intf2": "sc1-eth0"
+    },
+    {
+      "node1": "swc",
+      "intf1": "swc-eth2",
+      "node2": "sc2",
+      "intf2": "sc2-eth0"
+    },
+    {
+      "node1": "swc",
+      "intf1": "swc-eth3",
+      "node2": "sc3",
+      "intf2": "sc3-eth0"
+    }
+  ]
+}

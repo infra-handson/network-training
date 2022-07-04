@@ -1,0 +1,159 @@
+---
+nodes:
+  - name: sa
+    type: host
+    routes: []
+    interfaces:
+      - name: sa-eth0
+        type: l2
+        sub_interfaces:
+          - ip_addr: 192.168.10.11/24
+            vlan: 10
+          - ip_addr: 192.168.20.11/24
+            vlan: 20
+          - ip_addr: 192.168.30.11/24
+            vlan: 30
+          - ip_addr: 192.168.40.11/24
+            vlan: 40
+  - name: sb
+    type: host
+    routes: []
+    interfaces:
+      - name: sb-eth0
+        type: l2
+        sub_interfaces:
+          - ip_addr: 192.168.10.12/24
+            vlan: 10
+          - ip_addr: 192.168.20.12/24
+            vlan: 20
+          - ip_addr: 192.168.30.12/24
+            vlan: 30
+          - ip_addr: 192.168.40.12/24
+            vlan: 40
+  - name: ra
+    type: router
+    routes: []
+    interfaces:
+      - name: ra-eth0
+        type: l2
+        sub_interfaces:
+          - ip_addr: 192.168.10.1/24
+            vlan: 10
+          - ip_addr: 192.168.20.1/24
+            vlan: 20
+          - ip_addr: 192.168.30.1/24
+            vlan: 30
+          - ip_addr: 192.168.40.1/24
+            vlan: 40
+  - name: rb
+    type: router
+    routes: []
+    interfaces:
+      - name: rb-eth0
+        type: l2
+        sub_interfaces:
+          - ip_addr: 192.168.10.2/24
+            vlan: 10
+          - ip_addr: 192.168.20.2/24
+            vlan: 20
+          - ip_addr: 192.168.30.2/24
+            vlan: 30
+          - ip_addr: 192.168.40.2/24
+            vlan: 40
+  - name: sw11
+    type: switch
+    stp: true
+    stp_priority: 0
+    interfaces:
+      - name: sw11-eth0
+        type: l2
+        trunk_vlans: [20, 30]
+      - name: sw11-eth1
+        type: l2
+        trunk_vlans: [10, 30, 40]
+      - name: sw11-eth2
+        type: l2
+        trunk_vlans: [10, 20, 30, 40]
+      - name: sw11-eth3
+        type: l2
+        trunk_vlans: [10, 20, 30, 40]
+  - name: sw12
+    type: switch
+    stp: true
+    stp_priority: 4096
+    interfaces:
+      - name: sw12-eth0
+        type: l2
+        trunk_vlans: [10, 20, 30]
+      - name: sw12-eth1
+        type: l2
+        trunk_vlans: [10, 30, 40]
+      - name: sw12-eth2
+        type: l2
+        trunk_vlans: [10, 20, 30, 40]
+      - name: sw12-eth3
+        type: l2
+        trunk_vlans: [10, 20, 30]
+  - name: sw21
+    type: switch
+    stp: true
+    interfaces:
+      - name: sw21-eth0
+        type: l2
+        trunk_vlans: [10, 20, 30, 40]
+      - name: sw21-eth1
+        type: l2
+        trunk_vlans: [20, 30]
+      - name: sw21-eth2
+        type: l2
+        trunk_vlans: [10, 20, 30, 40]
+  - name: sw22
+    type: switch
+    stp: true
+    interfaces:
+      - name: sw22-eth0
+        type: l2
+        trunk_vlans: [10, 20, 30, 40]
+      - name: sw22-eth1
+        type: l2
+        trunk_vlans: [20, 30, 40]
+      - name: sw22-eth2
+        type: l2
+        trunk_vlans: [10, 20, 30, 40]
+links:
+  - node1: ra
+    intf1: ra-eth0
+    node2: sw11
+    intf2: sw11-eth0
+  - node1: rb
+    intf1: rb-eth0
+    node2: sw12
+    intf2: sw12-eth0
+  - node1: sw11
+    intf1: sw11-eth1
+    node2: sw12
+    intf2: sw12-eth1
+  - node1: sw11
+    intf1: sw11-eth2
+    node2: sw21
+    intf2: sw21-eth0
+  - node1: sw11
+    intf1: sw11-eth3
+    node2: sw22
+    intf2: sw22-eth1
+  - node1: sw12
+    intf1: sw12-eth3
+    node2: sw21
+    intf2: sw21-eth1
+  - node1: sw12
+    intf1: sw12-eth2
+    node2: sw22
+    intf2: sw22-eth0
+  - node1: sw21
+    intf1: sw21-eth2
+    node2: sa
+    intf2: sa-eth0
+  - node1: sw22
+    intf1: sw22-eth2
+    node2: sb
+    intf2: sb-eth0

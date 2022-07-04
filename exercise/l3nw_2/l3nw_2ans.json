@@ -1,0 +1,431 @@
+{
+  "nodes": [
+    {
+      "name": "sa",
+      "type": "host",
+      "interfaces": [
+        {
+          "ip_addr": "172.16.0.141/25",
+          "name": "sa-eth0",
+          "type": "l3"
+        }
+      ],
+      "routes": [
+        {
+          "dst_net": "default",
+          "next_hop": "172.16.0.129",
+          "note": "ANSWER: default to Router.A"
+        }
+      ]
+    },
+    {
+      "name": "ra",
+      "routes": [],
+      "type": "router",
+      "interfaces": [
+        {
+          "ip_addr": "172.16.0.129/25",
+          "name": "ra-eth0",
+          "type": "l3"
+        },
+        {
+          "ip_addr": "172.16.0.1/25",
+          "name": "ra-eth1",
+          "type": "l3"
+        }
+      ]
+    },
+    {
+      "name": "ha",
+      "type": "host",
+      "routes": [
+        {
+          "dst_net": "default",
+          "next_hop": "192.168.0.33",
+          "note": "ANSWER: default to Router.B"
+        },
+        {
+          "dst_net": "172.16.0.128/25",
+          "next_hop": "172.16.0.1",
+          "note": "ANSWER: NW.A to Router.A"
+        },
+        {
+          "dst_net": "192.168.0.28/30",
+          "next_hop": "192.168.0.37",
+          "note": "ANSWER: NW.C to Router.C"
+        }
+      ],
+      "interfaces": [
+        {
+          "ip_addr": "192.168.0.34/30",
+          "name": "ha-eth0",
+          "type": "l3"
+        },
+        {
+          "ip_addr": "192.168.0.38/30",
+          "name": "ha-eth1",
+          "type": "l3"
+        },
+        {
+          "ip_addr": "172.16.0.22/25",
+          "name": "ha-eth2",
+          "type": "l3"
+        }
+      ]
+    },
+    {
+      "name": "rb",
+      "type": "router",
+      "routes": [
+        {
+          "dst_net": "default",
+          "next_hop": "192.168.0.5",
+          "note": "default to Router.E"
+        }
+      ],
+      "interfaces": [
+        {
+          "ip_addr": "192.168.0.17/30",
+          "name": "rb-eth0",
+          "type": "l3"
+        },
+        {
+          "ip_addr": "192.168.0.10/30",
+          "name": "rb-eth1",
+          "type": "l3"
+        },
+        {
+          "ip_addr": "192.168.0.6/30",
+          "name": "rb-eth2",
+          "type": "l3"
+        },
+        {
+          "ip_addr": "192.168.0.25/30",
+          "name": "rb-eth3",
+          "type": "l3"
+        },
+        {
+          "ip_addr": "192.168.0.33/30",
+          "name": "rb-eth4",
+          "type": "l3"
+        }
+      ]
+    },
+    {
+      "name": "rc",
+      "type": "router",
+      "routes": [
+        {
+          "dst_net": "192.168.0.24/30",
+          "next_hop": "192.168.0.13",
+          "note": "NW.B to Router.D"
+        },
+        {
+          "dst_net": "192.168.0.20/30",
+          "next_hop": "192.168.0.13",
+          "note": "NW.D to Router.D"
+        },
+        {
+          "dst_net": "192.168.0.32/30",
+          "next_hop": "192.168.0.17",
+          "note": "NW.q to Router.B"
+        }
+      ],
+      "interfaces": [
+        {
+          "ip_addr": "192.168.0.18/30",
+          "name": "rc-eth0",
+          "type": "l3"
+        },
+        {
+          "ip_addr": "192.168.0.14/30",
+          "name": "rc-eth1",
+          "type": "l3"
+        },
+        {
+          "ip_addr": "192.168.0.29/30",
+          "name": "rc-eth2",
+          "type": "l3"
+        },
+        {
+          "ip_addr": "192.168.0.37/30",
+          "name": "rc-eth3",
+          "type": "l3"
+        }
+      ]
+    },
+    {
+      "name": "rd",
+      "type": "router",
+      "routes": [
+        {
+          "dst_net": "default",
+          "next_hop": "192.168.0.1",
+          "note": "default to Router.E"
+        },
+        {
+          "dst_net": "192.168.0.24/30",
+          "next_hop": "192.168.0.10",
+          "note": "NW.B to Router.B"
+        },
+        {
+          "dst_net": "192.168.0.28/30",
+          "next_hop": "192.168.0.10",
+          "note": "NW.C to Router.B"
+        },
+        {
+          "dst_net": "192.168.0.32/30",
+          "next_hop": "192.168.0.10",
+          "note": "NW.q to Router.B"
+        },
+        {
+          "dst_net": "192.168.0.36/30",
+          "next_hop": "192.168.0.14",
+          "note": "NW.r to Router.C"
+        }
+      ],
+      "interfaces": [
+        {
+          "ip_addr": "192.168.0.2/30",
+          "name": "rd-eth0",
+          "type": "l3"
+        },
+        {
+          "ip_addr": "192.168.0.9/30",
+          "name": "rd-eth1",
+          "type": "l3"
+        },
+        {
+          "ip_addr": "192.168.0.13/30",
+          "name": "rd-eth2",
+          "type": "l3"
+        },
+        {
+          "ip_addr": "192.168.0.21/30",
+          "name": "rd-eth3",
+          "type": "l3"
+        }
+      ]
+    },
+    {
+      "name": "re",
+      "type": "router",
+      "routes": [
+        {
+          "dst_net": "default",
+          "next_hop": "203.0.113.117",
+          "note": "default to internet (Server.E)"
+        },
+        {
+          "dst_net": "192.168.0.24/30",
+          "next_hop": "192.168.0.6",
+          "note": "NW.B to Router.B"
+        },
+        {
+          "dst_net": "192.168.0.28/30",
+          "next_hop": "192.168.0.2",
+          "note": "NW.C to Router.D"
+        },
+        {
+          "dst_net": "192.168.0.20/30",
+          "next_hop": "192.168.0.2",
+          "note": "NW.D to Router.D"
+        },
+        {
+          "dst_net": "192.168.0.32/30",
+          "next_hop": "192.168.0.2",
+          "note": "NW.q to Router.D"
+        },
+        {
+          "dst_net": "192.168.0.36/30",
+          "next_hop": "192.168.0.2",
+          "note": "NW.r to Router.D"
+        },
+        {
+          "dst_net": "192.168.0.12/30",
+          "next_hop": "192.168.0.2",
+          "note": "NW.v to Router.D"
+        }
+      ],
+      "interfaces": [
+        {
+          "ip_addr": "203.0.113.83/24",
+          "name": "re-eth0",
+          "type": "l3"
+        },
+        {
+          "ip_addr": "192.168.0.5/30",
+          "name": "re-eth1",
+          "type": "l3"
+        },
+        {
+          "ip_addr": "192.168.0.1/30",
+          "name": "re-eth2",
+          "type": "l3"
+        }
+      ]
+    },
+    {
+      "name": "sb",
+      "routes": [
+        {
+          "dst_net": "default",
+          "next_hop": "192.168.0.25",
+          "note": "default to Router.B"
+        }
+      ],
+      "type": "host",
+      "interfaces": [
+        {
+          "ip_addr": "192.168.0.26/30",
+          "name": "sb-eth0",
+          "type": "l3"
+        }
+      ]
+    },
+    {
+      "name": "sc",
+      "type": "host",
+      "routes": [
+        {
+          "dst_net": "default",
+          "next_hop": "192.168.0.29",
+          "note": "default to Router.C"
+        }
+      ],
+      "interfaces": [
+        {
+          "ip_addr": "192.168.0.30/30",
+          "name": "sc-eth0",
+          "type": "l3"
+        }
+      ]
+    },
+    {
+      "name": "sd",
+      "type": "host",
+      "routes": [
+        {
+          "dst_net": "default",
+          "next_hop": "192.168.0.21",
+          "note": "default to Router.D"
+        }
+      ],
+      "interfaces": [
+        {
+          "ip_addr": "192.168.0.22/30",
+          "name": "sd-eth0",
+          "type": "l3"
+        }
+      ]
+    },
+    {
+      "name": "se",
+      "type": "host",
+      "routes": [
+        {
+          "dst_net": "default",
+          "next_hop": "blackhole",
+          "note": "internet (blackhole for unknown)"
+        },
+        {
+          "dst_net": "192.168.0.0/27",
+          "next_hop": "203.0.113.83",
+          "note": "to internal(1)"
+        },
+        {
+          "dst_net": "192.168.0.32/29",
+          "next_hop": "203.0.113.83",
+          "note": "to internal(2)"
+        }
+      ],
+      "interfaces": [
+        {
+          "ip_addr": "203.0.113.117/24",
+          "name": "se-eth0",
+          "type": "l3"
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "intf1": "sa-eth0",
+      "intf2": "ra-eth0",
+      "node1": "sa",
+      "node2": "ra"
+    },
+    {
+      "intf1": "ra-eth1",
+      "intf2": "ha-eth2",
+      "node1": "ra",
+      "node2": "ha"
+    },
+    {
+      "intf1": "ha-eth0",
+      "intf2": "rb-eth4",
+      "node1": "ha",
+      "node2": "rb"
+    },
+    {
+      "intf1": "ha-eth1",
+      "intf2": "rc-eth3",
+      "node1": "ha",
+      "node2": "rc"
+    },
+    {
+      "intf1": "sb-eth0",
+      "intf2": "rb-eth3",
+      "node1": "sb",
+      "node2": "rb"
+    },
+    {
+      "intf1": "rb-eth0",
+      "intf2": "rc-eth0",
+      "node1": "rb",
+      "node2": "rc"
+    },
+    {
+      "intf1": "rc-eth2",
+      "intf2": "sc-eth0",
+      "node1": "rc",
+      "node2": "sc"
+    },
+    {
+      "intf1": "rb-eth2",
+      "intf2": "re-eth1",
+      "node1": "rb",
+      "node2": "re"
+    },
+    {
+      "intf1": "rb-eth1",
+      "intf2": "rd-eth1",
+      "node1": "rb",
+      "node2": "rd"
+    },
+    {
+      "intf1": "rc-eth1",
+      "intf2": "rd-eth2",
+      "node1": "rc",
+      "node2": "rd"
+    },
+    {
+      "intf1": "re-eth2",
+      "intf2": "rd-eth0",
+      "node1": "re",
+      "node2": "rd"
+    },
+    {
+      "intf1": "rd-eth3",
+      "intf2": "sd-eth0",
+      "node1": "rd",
+      "node2": "sd"
+    },
+    {
+      "intf1": "re-eth0",
+      "intf2": "se-eth0",
+      "node1": "re",
+      "node2": "se"
+    }
+  ]
+}

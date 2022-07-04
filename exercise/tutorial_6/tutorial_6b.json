@@ -1,0 +1,132 @@
+{
+  "nodes": [
+    {
+      "name": "ha",
+      "type": "host",
+      "interfaces": [
+        {
+          "name": "ha-eth0",
+          "type": "l3",
+          "ip_addr": "192.168.0.1/24"
+        }
+      ]
+    },
+    {
+      "name": "hb",
+      "type": "host",
+      "interfaces": [
+        {
+          "name": "hb-eth0",
+          "type": "l3",
+          "ip_addr": "192.168.0.2/24"
+        }
+      ]
+    },
+    {
+      "name": "hc",
+      "type": "host",
+      "interfaces": [
+        {
+          "name": "hc-eth0",
+          "type": "l3",
+          "ip_addr": "192.168.0.3/24"
+        }
+      ]
+    },
+    {
+      "name": "hd",
+      "type": "host",
+      "interfaces": [
+        {
+          "name": "hd-eth0",
+          "type": "l3",
+          "ip_addr": "192.168.0.3/24"
+        }
+      ]
+    },
+    {
+      "name": "sw1",
+      "type": "switch",
+      "stp": true,
+      "interfaces": [
+        {
+          "name": "sw1-eth1",
+          "type": "l2"
+        },
+        {
+          "name": "sw1-eth2",
+          "type": "l2"
+        },
+        {
+          "name": "sw1-eth3",
+          "type": "l2"
+        },
+        {
+          "name": "sw1-eth4",
+          "type": "l2"
+        },
+        {
+          "name": "sw1-eth10",
+          "type": "l2"
+        },
+        {
+          "name": "sw1-eth11",
+          "type": "l2"
+        }
+      ]
+    },
+    {
+      "name": "sw2",
+      "type": "switch",
+      "stp": true,
+      "interfaces": [
+        {
+          "name": "sw2-eth0",
+          "type": "l2"
+        },
+        {
+          "name": "sw2-eth1",
+          "type": "l2"
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "node1": "ha",
+      "intf1": "ha-eth0",
+      "node2": "sw1",
+      "intf2": "sw1-eth1"
+    },
+    {
+      "node1": "hb",
+      "intf1": "hb-eth0",
+      "node2": "sw1",
+      "intf2": "sw1-eth2"
+    },
+    {
+      "node1": "hc",
+      "intf1": "hc-eth0",
+      "node2": "sw1",
+      "intf2": "sw1-eth3"
+    },
+    {
+      "node1": "hd",
+      "intf1": "hd-eth0",
+      "node2": "sw1",
+      "intf2": "sw1-eth4"
+    },
+    {
+      "node1": "sw1",
+      "intf1": "sw1-eth10",
+      "node2": "sw2",
+      "intf2": "sw2-eth0"
+    },
+    {
+      "node1": "sw1",
+      "intf1": "sw1-eth11",
+      "node2": "sw2",
+      "intf2": "sw2-eth1"
+    }
+  ]
+}
