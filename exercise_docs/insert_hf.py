@@ -8,35 +8,23 @@ import re
 import sys
 
 
+EXERCISE_DOCS = ["question.md", "answer.md"]
+
 SEQ_DICT = {
-    "for_user": ["command_list", "glossary"],
-    "for_author": ["setup", "make_exercise"],
-    "tutorials": ["tutorial_0", "tutorial_1", "tutorial_2", "tutorial_3", "tutorial_4", "tutorial_5"],
-    "basic_exercise": [
-        "l2nw_1",
-        "l2nw_1ans",
-        "l2nw_2",
-        "l2nw_2ans",
-        "l3nw_1",
-        "l3nw_1ans",
-        "l3nw_2",
-        "l3nw_2ans",
-        "l4nw_1",
-        "l4nw_1ans",
-        "l4nw_2",
-        "l4nw_2ans",
-    ],
-    "adv_exercise": [
-        "tutorial_6",
-        "l2nw_3",
-        "l2nw_3ans",
-        "l4nw_3",
-        "l4nw_3ans",
-        "app_1",
-        "app_1ans",
-        "app_2",
-        "app_2ans",
-    ],
+    "for_user": ["./common/%s" % f for f in ["command_list.md", "glossary.md"]],
+    "for_author": ["./common/%s" % f for f in ["setup.md", "make_exercise.md"]],
+    "tutorials": ["./tutorial%d/scenario.md" % i for i in range(0, 8)],
+    "basic_exercise": sum([
+        ["./l2nw%d/%s" % (i, f) for i in range(1, 3) for f in EXERCISE_DOCS],
+        ["./l3nw%d/%s" % (i, f) for i in range(1, 3) for f in EXERCISE_DOCS],
+        ["./l4nw%d/%s" % (i, f) for i in range(1, 3) for f in EXERCISE_DOCS],
+    ], []),
+    "adv_exercise": sum([
+        ["./tutorial8/scenario.md"],
+        ["./l2nw%d/%s" % (i, f) for i in range(3, 4) for f in EXERCISE_DOCS],
+        ["./l4nw%d/%s" % (i, f) for i in range(3, 4) for f in EXERCISE_DOCS],
+        ["./app%d/%s" % (i, f) for i in range(1, 3) for f in EXERCISE_DOCS],
+    ], []),
 }
 
 
@@ -48,33 +36,29 @@ def find_dict_contains(md_file_basename):
     return None
 
 
-def make_link(md_file_basename, found_dict, link_text):
+def make_link(link_text, file_path):
     """make markdown link href"""
-    if found_dict in ("for_user", "for_author"):
-        return "[%s](../common/%s.md)" % (link_text, md_file_basename)
-    if found_dict == "tutorials":
-        return "[%s](../%s/%s.md)" % (link_text, re.sub("[a-z]$", "", md_file_basename), md_file_basename)
-    if found_dict in ("basic_exercise", "adv_exercise"):
-        return "[%s](../%s/%s.md)" % (link_text, md_file_basename.replace("ans", ""), md_file_basename)
-    return "[%s]" % link_text
+    return "[%s](%s)" % (link_text, file_path)
 
 
-def make_prev_link(md_file_basename, found_dict):
+def make_prev_link(file_path, found_dict):
     """make previous link"""
-    found_index = SEQ_DICT[found_dict].index(md_file_basename)
+    found_index = SEQ_DICT[found_dict].index(file_path)
     prev_index = found_index - 1
     if prev_index >= 0:
-        return make_link(SEQ_DICT[found_dict][prev_index], found_dict, "Previous")
+        prev_path = os.path.normpath(SEQ_DICT[found_dict][prev_index])
+        return make_link("Previous", os.path.join("..", prev_path))
 
     return "Previous"
 
 
-def make_next_link(md_file_basename, found_dict):
+def make_next_link(file_path, found_dict):
     """make next link"""
-    found_index = SEQ_DICT[found_dict].index(md_file_basename)
+    found_index = SEQ_DICT[found_dict].index(file_path)
     next_index = found_index + 1
     if next_index < len(SEQ_DICT[found_dict]):
-        return make_link(SEQ_DICT[found_dict][next_index], found_dict, "Next")
+        next_path = os.path.normpath(SEQ_DICT[found_dict][next_index])
+        return make_link("Next", os.path.join("..", next_path))
 
     return "Next"
 
@@ -90,14 +74,13 @@ def make_top_link(found_dict):
 def make_nav_link(file_path):
     """make page header links"""
     # basename without ext
-    file_basename = os.path.splitext(os.path.basename(file_path))[0]
-    found_dict = find_dict_contains(file_basename)
+    found_dict = find_dict_contains(file_path)
     if found_dict is None:
         print("Error: file %s is not found in SEQ_DICT" % file_path, file=sys.stderr)
         sys.exit(1)
 
-    prev_link = make_prev_link(file_basename, found_dict)
-    next_link = make_next_link(file_basename, found_dict)
+    prev_link = make_prev_link(file_path, found_dict)
+    next_link = make_next_link(file_path, found_dict)
     top_link = make_top_link(found_dict)
 
     return "%s << %s >> %s" % (prev_link, top_link, next_link)

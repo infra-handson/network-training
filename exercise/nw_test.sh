@@ -10,23 +10,23 @@ function run_test() {
 }
 
 case "$1" in
-  "l3nw_2")
-    run_test l3nw_2 l3nw_2 l3nw_2
+  "l3nw2")
+    run_test l3nw2 l3 l3
     ;;
-  "l4nw_1"|"l4nw_3")
-    run_test l4nw_1 l4nw_1 l4nw_1
+  "l4nw1"|"l4nw3")
+    run_test l4nw1 l4 l4
     ;;
-  "app_1_l3")
+  "app1_l3")
     echo "# L3 success case test"
-    run_test app_1 app_1_l3s app_1s
+    run_test app1 l3_success success
     echo "# L3 fail case test"
-    run_test app_1 app_1_l3f app_1f
+    run_test app1 l3_fail fail
     ;;
-  "app_1_l4")
+  "app1_l4")
     echo "# L4 success case test"
-    run_test app_1 app_1_l4s app_1s
+    run_test app1 l4_success success
     echo "# L4 fail case test"
-    run_test app_1 app_1_l4f app_1f
+    run_test app1 l4_fail fail
     ;;
   *)
     echo "Unknown scenario name to test: $1"

@@ -1,0 +1,472 @@
+---
+nodes:
+  - name: inet
+    type: host
+    svc_procs:
+      - python3 -m http.server 80 -d /exercise/app1/docroot-inet-http &
+      - python3 -m http.server 22 -d /exercise/app1/docroot-inet-ssh &
+    routes:
+      - dst_net: default
+        next_hop: blackhole
+        note: internet (blackhole for unknown)  # DO NOT USE DEFAULT to avoid ping-pong between re and se
+      - dst_net: 172.16.0.0/16
+        next_hop: 203.0.113.24
+        note: internal to Firewall.A
+    interfaces:
+      - name: inet-eth0
+        type: l3
+        ip_addr: 203.0.113.13/24
+  - name: fa
+    type: router
+    svc_procs:
+      - sh /exercise/app1/fa_fw.sh
+    routes:
+      - dst_net: default
+        next_hop: 203.0.113.13
+        note: internet
+      - dst_net: 172.16.0.64/26
+        next_hop: blackhole
+        note: null route for external systems
+      - dst_net: 172.16.0.0/16
+        next_hop: 172.16.0.2
+        note: internal to Router.A
+    interfaces:
+      - name: fa-eth0
+        type: l3
+        ip_addr: 203.0.113.24/24
+      - name: fa-eth1
+        type: l2
+        sub_interfaces:
+          - ip_addr: 172.16.0.65/29
+            vlan: 10
+      - name: fa-eth2
+        type: l3
+        ip_addr: 172.16.0.1/30
+  - name: swa
+    type: switch
+    interfaces:
+      - name: swa-eth0
+        type: l2
+        trunk_vlans: [10]
+      - name: swa-eth1
+        type: l2
+        access_vlan: 10
+  - name: s0a
+    type: host
+    svc_procs:
+      - python3 -m http.server 80 -d /exercise/app1/docroot-s0a-http &
+      - python3 -m http.server 22 -d /exercise/app1/docroot-s0a-ssh &
+    routes:
+      - dst_net: default
+        next_hop: 172.16.0.65
+    interfaces:
+      - name: s0a-eth0
+        type: l3
+        ip_addr: 172.16.0.66/29
+  - name: ra
+    type: router
+    routes:
+      - dst_net: default
+        next_hop: 172.16.0.1
+        note: default to Firewall.A
+      - dst_net: 172.16.0.64/26
+        next_hop: 172.16.0.1
+        note: external systems to Firewall.A
+      - dst_net: 172.16.0.128/25
+        next_hop: 172.16.0.6
+        note: internal systems to Router.E
+      - dst_net: 172.16.1.0/25
+        next_hop: 172.16.0.10
+        note: shinjuku-A/B to Firewall.B
+      - dst_net: 172.16.1.128/25
+        next_hop: 172.16.0.14
+        note: toyosu to Firewall.C
+      - dst_net: 172.16.0.16/29
+        next_hop: 172.16.0.10
+        note: fb-rb & fb-rc interlink to Firewall.B
+      - dst_net: 172.16.0.24/30
+        next_hop: 172.16.0.14
+        note: fc-rd interlink to Firewall.C
+      - dst_net: 172.16.1.64/26
+        next_hop: 172.16.0.14
+        note: Moved Soumu and keiri to Firewall.C (!ANSWER!)
+      - dst_net: 172.16.0.0/16
+        next_hop: blackhole
+        note: null route of whole company area
+    interfaces:
+      - name: ra-eth0
+        type: l3
+        ip_addr: 172.16.0.2/30
+      - name: ra-eth1
+        type: l3
+        ip_addr: 172.16.0.5/30
+      - name: ra-eth2
+        type: l3
+        ip_addr: 172.16.0.9/30
+      - name: ra-eth3
+        type: l3
+        ip_addr: 172.16.0.13/30
+  - name: re
+    type: router
+    routes:
+      - dst_net: default
+        next_hop: 172.16.0.5
+      - dst_net: 172.16.0.128/25
+        next_hop: blackhole
+        note: null route for internal-systems block
+    interfaces:
+      - name: re-eth0
+        type: l3
+        ip_addr: 172.16.0.6/30
+      - name: re-eth1
+        type: l2
+        sub_interfaces:
+          - ip_addr: 172.16.0.129/29
+            vlan: 10
+          - ip_addr: 172.16.0.137/29
+            vlan: 11
+          - ip_addr: 172.16.0.145/29  # !ANSWER!
+            vlan: 12
+  - name: swe
+    type: switch
+    interfaces:
+      - name: swe-eth0
+        type: l2
+        trunk_vlans: [10, 11, 12]
+      - name: swe-eth1
+        type: l2
+        access_vlan: 10
+      - name: swe-eth2
+        type: l2
+        access_vlan: 11
+      - name: swe-eth3
+        type: l2
+        access_vlan: 12
+  - name: s1a
+    type: host
+    svc_procs:
+      - python3 -m http.server 80 -d /exercise/app1/docroot-s1a-http &
+      - python3 -m http.server 22 -d /exercise/app1/docroot-s1a-ssh &
+    routes:
+      - dst_net: default
+        next_hop: 172.16.0.129
+    interfaces:
+      - name: s1a-eth0
+        type: l3
+        ip_addr: 172.16.0.130/29
+  - name: s1b
+    type: host
+    svc_procs:
+      - python3 -m http.server 8000 -d /exercise/app1/docroot-s1b-http &
+      - python3 -m http.server 22 -d /exercise/app1/docroot-s1b-ssh &
+    routes:
+      - dst_net: default
+        next_hop: 172.16.0.137
+    interfaces:
+      - name: s1b-eth0
+        type: l3
+        ip_addr: 172.16.0.138/29
+  - name: s1c
+    type: host
+    svc_procs:
+      - python3 -m http.server 8000 -d /exercise/app1/docroot-s1c-http &
+      - python3 -m http.server 22 -d /exercise/app1/docroot-s1c-ssh &
+    routes:
+      - dst_net: default
+        next_hop: 172.16.0.145  # !ANSWER!
+    interfaces:
+      - name: s1c-eth0
+        type: l3
+        ip_addr: 172.16.0.146/29  # !ANSWER!
+  - name: fb
+    type: router
+    svc_procs:
+      - sh /exercise/app1/fb_fw_ans.sh  # !ANSWER!
+    routes:
+      - dst_net: default
+        next_hop: 172.16.0.9
+        note: default to Router.A
+      - dst_net: 172.16.1.0/25
+        next_hop: 172.16.0.18
+        note: shinjuku-A/B to Router.B
+      - dst_net: 172.16.1.64/26
+        next_hop: 172.16.0.9
+        note: shinjuku-B to Router.A ( !ANSWER! this route is able to remove)
+    interfaces:
+      - name: fb-eth0
+        type: l3
+        ip_addr: 172.16.0.10/30
+      - name: fb-eth1
+        type: l3
+        ip_addr: 172.16.0.17/30
+      - name: fb-eth2
+        type: l3
+        ip_addr: 172.16.0.21/30
+  - name: rb
+    type: router
+    routes:
+      - dst_net: default
+        next_hop: 172.16.0.17
+        note: default to Firewall.B
+    interfaces:
+      - name: rb-eth0
+        type: l3
+        ip_addr: 172.16.0.18/30
+      - name: rb-eth1
+        type: l2
+        sub_interfaces:
+          - ip_addr: 172.16.1.1/27
+            vlan: 10
+          - ip_addr: 172.16.1.33/27
+            vlan: 11
+  - name: swb
+    type: switch
+    interfaces:
+      - name: swb-eth0
+        type: l2
+        trunk_vlans: [10, 11]
+      - name: swb-eth1
+        type: l2
+        access_vlan: 10
+      - name: swb-eth2
+        type: l2
+        access_vlan: 11
+  - name: h2a
+    type: host
+    routes:
+      - dst_net: default
+        next_hop: 172.16.1.1
+    interfaces:
+      - name: h2a-eth0
+        type: l3
+        ip_addr: 172.16.1.2/27
+  - name: h2b
+    type: host
+    routes:
+      - dst_net: default
+        next_hop: 172.16.1.33
+    interfaces:
+      - name: h2b-eth0
+        type: l3
+        ip_addr: 172.16.1.34/27
+  - name: rc
+    type: router
+    routes:
+      - dst_net: default
+        next_hop: 172.16.0.21
+        note: default to Firewall.B
+    interfaces:
+      - name: rc-eth0
+        type: l3
+        ip_addr: 172.16.0.22/30
+      - name: rc-eth1
+        type: l2
+        sub_interfaces:
+          - ip_addr: 172.16.1.65/27
+            vlan: 10
+          - ip_addr: 172.16.1.97/27
+            vlan: 11
+  - name: swc
+    type: switch
+    interfaces:
+      - name: swc-eth0
+        type: l2
+        trunk_vlans: [10, 11]
+      - name: swc-eth1
+        type: l2
+        access_vlan: 10
+      - name: swc-eth2
+        type: l2
+        access_vlan: 11
+  - name: fc
+    type: router
+    svc_procs:
+      - sh /exercise/app1/fc_fw_ans.sh  # !ANSWER!
+    routes:
+      - dst_net: default
+        next_hop: 172.16.0.13
+        note: default to Router.A
+      - dst_net: 172.16.1.128/25
+        next_hop: 172.16.0.26
+        note: toyosu, building-unit A/B to Router.D
+      - dst_net: 172.16.1.64/26
+        next_hop: 172.16.0.26
+        note: toyosu, moved keiri and soumu to Router.D (!ANSWER!)
+    interfaces:
+      - name: fc-eth0
+        type: l3
+        ip_addr: 172.16.0.14/30
+      - name: fc-eth1
+        type: l3
+        ip_addr: 172.16.0.25/30
+  - name: rd
+    type: router
+    routes:
+      - dst_net: default
+        next_hop: 172.16.0.25
+        note: default to Firewall.C
+      - dst_net: 172.16.1.128/25
+        next_hop: blackhole
+        note: null route for toyosu
+    interfaces:
+      - name: rd-eth0
+        type: l3
+        ip_addr: 172.16.0.26/30
+      - name: rd-eth1
+        type: l2
+        sub_interfaces:
+          - ip_addr: 172.16.1.129/27
+            vlan: 10
+          - ip_addr: 172.16.1.161/27
+            vlan: 11
+          - ip_addr: 172.16.1.65/27
+            vlan: 12
+          - ip_addr: 172.16.1.97/27
+            vlan: 13
+  - name: swd
+    type: switch
+    interfaces:
+      - name: swd-eth0
+        type: l2
+        trunk_vlans: [10, 11, 12, 13]
+      - name: swd-eth1
+        type: l2
+        access_vlan: 10
+      - name: swd-eth2
+        type: l2
+        access_vlan: 11
+      - name: swd-eth3
+        type: l2
+        access_vlan: 12
+      - name: swd-eth4
+        type: l2
+        access_vlan: 13
+  - name: h3a
+    type: host
+    routes:
+      - dst_net: default
+        next_hop: 172.16.1.65
+    interfaces:
+      - name: h3a-eth0
+        type: l3
+        ip_addr: 172.16.1.66/27
+  - name: h3b
+    type: host
+    routes:
+      - dst_net: default
+        next_hop: 172.16.1.97
+    interfaces:
+      - name: h3b-eth0
+        type: l3
+        ip_addr: 172.16.1.98/27
+  - name: h4a
+    type: host
+    routes:
+      - dst_net: default
+        next_hop: 172.16.1.129
+    interfaces:
+      - name: h4a-eth0
+        type: l3
+        ip_addr: 172.16.1.130/27
+  - name: h4b
+    type: host
+    routes:
+      - dst_net: default
+        next_hop: 172.16.1.161
+    interfaces:
+      - name: h4b-eth0
+        type: l3
+        ip_addr: 172.16.1.162/27
+links:
+  - node1: inet
+    intf1: inet-eth0
+    node2: fa
+    intf2: fa-eth0
+  - node1: fa
+    intf1: fa-eth1
+    node2: swa
+    intf2: swa-eth0
+  - node1: swa
+    intf1: swa-eth1
+    node2: s0a
+    intf2: s0a-eth0
+  - node1: fa
+    intf1: fa-eth2
+    node2: ra
+    intf2: ra-eth0
+  - node1: ra
+    intf1: ra-eth1
+    node2: re
+    intf2: re-eth0
+  - node1: re
+    intf1: re-eth1
+    node2: swe
+    intf2: swe-eth0
+  - node1: swe
+    intf1: swe-eth1
+    node2: s1a
+    intf2: s1a-eth0
+  - node1: swe
+    intf1: swe-eth2
+    node2: s1b
+    intf2: s1b-eth0
+  - node1: swe
+    intf1: swe-eth3
+    node2: s1c
+    intf2: s1c-eth0
+  - node1: ra
+    intf1: ra-eth2
+    node2: fb
+    intf2: fb-eth0
+  - node1: fb
+    intf1: fb-eth1
+    node2: rb
+    intf2: rb-eth0
+  - node1: rb
+    intf1: rb-eth1
+    node2: swb
+    intf2: swb-eth0
+  - node1: swb
+    intf1: swb-eth1
+    node2: h2a
+    intf2: h2a-eth0
+  - node1: swb
+    intf1: swb-eth2
+    node2: h2b
+    intf2: h2b-eth0
+  - node1: fb
+    intf1: fb-eth2
+    node2: rc
+    intf2: rc-eth0
+  - node1: rc
+    intf1: rc-eth1
+    node2: swc
+    intf2: swc-eth0
+  - node1: ra
+    intf1: ra-eth3
+    node2: fc
+    intf2: fc-eth0
+  - node1: fc
+    intf1: fc-eth1
+    node2: rd
+    intf2: rd-eth0
+  - node1: rd
+    intf1: rd-eth1
+    node2: swd
+    intf2: swd-eth0
+  - node1: swd
+    intf1: swd-eth1
+    node2: h4a
+    intf2: h4a-eth0
+  - node1: swd
+    intf1: swd-eth2
+    node2: h4b
+    intf2: h4b-eth0
+  - node1: swd
+    intf1: swd-eth3
+    node2: h3a
+    intf2: h3a-eth0
+  - node1: swd
+    intf1: swd-eth4
+    node2: h3b
+    intf2: h3b-eth0

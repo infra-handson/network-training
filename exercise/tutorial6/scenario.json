@@ -1,0 +1,115 @@
+{
+  "nodes": [
+    {
+      "name": "ha",
+      "type": "host",
+      "routes": [
+        {
+          "dst_net": "default",
+          "next_hop": "192.168.0.254"
+        }
+      ],
+      "interfaces": [
+        {
+          "name": "ha-eth0",
+          "type": "l3",
+          "ip_addr": "192.168.0.1/24"
+        }
+      ]
+    },
+    {
+      "name": "hb",
+      "type": "host",
+      "routes": [
+        {
+          "dst_net": "default",
+          "next_hop": "192.168.0.254"
+        }
+      ],
+      "interfaces": [
+        {
+          "name": "hb-eth0",
+          "type": "l3",
+          "ip_addr": "192.168.0.2/24"
+        }
+      ]
+    },
+    {
+      "name": "sw1",
+      "type": "switch",
+      "interfaces": [
+        {
+          "name": "sw1-eth0",
+          "type": "l2"
+        },
+        {
+          "name": "sw1-eth1",
+          "type": "l2"
+        },
+        {
+          "name": "sw1-eth2",
+          "type": "l2"
+        }
+      ]
+    },
+    {
+      "name": "ra",
+      "type": "router",
+      "interfaces": [
+        {
+          "name": "ra-eth0",
+          "type": "l3",
+          "ip_addr": "192.168.0.254/24"
+        },
+        {
+          "name": "ra-eth1",
+          "type": "l3",
+          "ip_addr": "172.16.0.254/24"
+        }
+      ]
+    },
+    {
+      "name": "hc",
+      "type": "host",
+      "routes": [
+        {
+          "dst_net": "default",
+          "next_hop": "172.16.0.254"
+        }
+      ],
+      "interfaces": [
+        {
+          "name": "hc-eth0",
+          "type": "l3",
+          "ip_addr": "172.16.0.1/24"
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "node1": "ha",
+      "intf1": "ha-eth0",
+      "node2": "sw1",
+      "intf2": "sw1-eth1"
+    },
+    {
+      "node1": "hb",
+      "intf1": "hb-eth0",
+      "node2": "sw1",
+      "intf2": "sw1-eth2"
+    },
+    {
+      "node1": "sw1",
+      "intf1": "sw1-eth0",
+      "node2": "ra",
+      "intf2": "ra-eth0"
+    },
+    {
+      "node1": "ra",
+      "intf1": "ra-eth1",
+      "node2": "hc",
+      "intf2": "hc-eth0"
+    }
+  ]
+}

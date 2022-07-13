@@ -1,0 +1,74 @@
+{
+  "nodes": [
+    {
+      "name": "ha",
+      "type": "host",
+      "routes": [
+        {
+          "dst_net": "default",
+          "next_hop": "192.168.0.254"
+        }
+      ],
+      "interfaces": [
+        {
+          "name": "ha-eth0",
+          "type": "l3",
+          "ip_addr": "192.168.0.1/24"
+        }
+      ]
+    },
+    {
+      "name": "hb",
+      "type": "host",
+      "routes": [
+        {
+          "dst_net": "default",
+          "next_hop": "172.16.0.254"
+        }
+      ],
+      "svc_procs": [
+        "python3 -m http.server 8000 -d /exercise/tutorial5/docroot-hb &"
+      ],
+      "interfaces": [
+        {
+          "name": "hb-eth0",
+          "type": "l3",
+          "ip_addr": "172.16.0.2/24"
+        }
+      ]
+    },
+    {
+      "name": "fa",
+      "type": "router",
+      "svc_procs": [
+        "sh /exercise/tutorial5/fa_fw.sh"
+      ],
+      "interfaces": [
+        {
+          "name": "fa-eth0",
+          "type": "l3",
+          "ip_addr": "192.168.0.254/24"
+        },
+        {
+          "name": "fa-eth1",
+          "type": "l3",
+          "ip_addr": "172.16.0.254/24"
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "node1": "ha",
+      "intf1": "ha-eth0",
+      "node2": "fa",
+      "intf2": "fa-eth0"
+    },
+    {
+      "node1": "fa",
+      "intf1": "fa-eth1",
+      "node2": "hb",
+      "intf2": "hb-eth0"
+    }
+  ]
+}

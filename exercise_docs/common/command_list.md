@@ -38,7 +38,7 @@ Previous << [Index](../index.md) >> [Next](../common/glossary.md)
 ## 演習コンテナ操作
 
 演習コンテナ外部での操作です。
-[チュートリアル0](../tutorial_0/tutorial_0.md) も参照してください。
+[チュートリアル0](../tutorial0/scenario.md) も参照してください。
 
 ### コンテナの起動確認・起動
 
@@ -206,9 +206,13 @@ mininet> sa ip -d link show sa-eth0.10
 
 ### 通信設定 (L2-L3テーブル操作)
 
-- MAC アドレステーブルの確認
+- ARP テーブルの確認
   - `ip neigh show`
-  - `arp`
+  - `arp [-n]`
+    - `-n` (numeric): 数値をそのまま表示します (名前に置き換えません)。
+- ARP テーブルのクリア
+  - `ip neigh flush インタフェース名`
+  - `arp -d IPアドレス`
 - 経路情報 (ルーティングテーブル) の確認
   - `ip route show`
 - 経路情報 (静的経路) の追加/削除
@@ -261,6 +265,8 @@ mininet> sa ip -d link show sa-eth0.10
     - スイッチの STP 設定および状態確認 (`stp-priority` / `stp_bridge_id` / `stp_designated_root` / `stp_root_path_cost`)
 - スイッチの MAC アドレステーブルの確認
   - `ovs-appctl fdb/show [スイッチ名]`
+- スイッチの MAC アドレステーブルの消去
+  - `ovs-appctl fdb/flush [スイッチ名]`
 - ポート名とポート番号の確認
   - `ovs-dpctl show`
   - `ovs-vsctl --columns=name,ofport list Interface [ポート名]`
