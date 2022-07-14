@@ -73,7 +73,7 @@ cd /exercise
 ```shell
 # Host.A
 ha ip -4 addr show dev ha-eth0  # L3アドレス: IP アドレスの確認
-ha ip link show dev ha-eth0     # L2アドレス:  MAC アドレスの確認
+ha ip link show dev ha-eth0     # L2アドレス: MAC アドレスの確認
 ha ip route                     # L3テーブル: ルーティングテーブルの確認
 ha ip neigh                     # L2テーブル: ARP テーブルの確認
 # Host.B
