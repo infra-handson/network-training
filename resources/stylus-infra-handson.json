@@ -1,0 +1,19 @@
+[
+  {
+    "enabled": true,
+    "installDate": 1656770921645,
+    "name": "infra-handson-github",
+    "sections": [
+      {
+        "code": "code {\n    font-family: Lucida Console, monospace;\n}"
+      }
+    ],
+    "updateDate": 1656770921645,
+    "_id": "3036bba3-dca0-4c37-b685-c4d724a2d0d9",
+    "_rev": 1656770957374,
+    "id": 1,
+    "inclusions": [
+      "*://github.com/infra-handson/*"
+    ]
+  }
+]

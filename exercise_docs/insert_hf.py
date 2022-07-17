@@ -11,7 +11,7 @@ import sys
 EXERCISE_DOCS = ["question.md", "answer.md"]
 
 SEQ_DICT = {
-    "for_user": ["./common/%s" % f for f in ["command_list.md", "glossary.md"]],
+    "for_user": ["./common/%s" % f for f in ["command_list.md", "glossary.md", "windows_code_font.md"]],
     "for_author": ["./common/%s" % f for f in ["setup.md", "make_exercise.md"]],
     "tutorials": ["./tutorial%d/scenario.md" % i for i in range(0, 8)],
     "basic_exercise": sum([
