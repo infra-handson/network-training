@@ -7,15 +7,18 @@
         {
           "name": "ha-eth0",
           "type": "l2",
+          "mac_addr": "00:00:5E:00:53:0a",
           "sub_interfaces": [
             {
               "ip_addr": "192.168.0.1/24",
               "vlan": 10,
+              "mac_addr": "00:00:5E:00:53:a1",
               "_parent_name_": "ha-eth0"
             },
             {
               "ip_addr": "172.16.0.1/24",
               "vlan": 20,
+              "mac_addr": "00:00:5E:00:53:a2",
               "_parent_name_": "ha-eth0"
             }
           ]
@@ -29,7 +32,8 @@
         {
           "name": "hb-eth0",
           "type": "l3",
-          "ip_addr": "192.168.0.2/24"
+          "ip_addr": "192.168.0.2/24",
+          "mac_addr": "00:00:5E:00:53:0b"
         }
       ]
     },
@@ -40,7 +44,8 @@
         {
           "name": "hc-eth0",
           "type": "l3",
-          "ip_addr": "172.16.0.2/24"
+          "ip_addr": "172.16.0.2/24",
+          "mac_addr": "00:00:5E:00:53:0c"
         }
       ]
     },
