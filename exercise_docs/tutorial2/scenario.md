@@ -89,7 +89,7 @@ cd /exercise
 
 ```shell
 # Host.A
-ha ip -4 addr show dev ha-eth0  # L3アドレス: IP アドレスの確認
+ha ip -4 addr show dev ha-eth0  # L2/L3アドレス: MAC アドレス・IP アドレスの確認
 ha ip link show dev ha-eth0     # L2アドレス: MAC アドレスの確認
 ha ip route                     # L3テーブル: ルーティングテーブルの確認
 ha ip neigh                     # L2テーブル: ARP テーブルの確認
@@ -105,7 +105,7 @@ hc ip route
 hc ip neigh
 ```
 
-実行結果は以下のようになります (一部省略しています)。
+実行結果は以下のようになります (Host.A 分のみ記載: その他のノードについてもそれぞれ確認してください)。
 初期状態 (まだ何も通信をしていない状態) では、ARP テーブルは空になります。空になっていない場合は後述するコマンドでクリアしてください。
 
 ```text
@@ -117,25 +117,21 @@ mininet> ha ip -4 addr show dev ha-eth0
        valid_lft forever preferred_lft forever
 mininet> ha ip link show dev ha-eth0
 2: ha-eth0@if12: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP mode DEFAULT group default qlen 1000
-    link/ether be:b7:5c:54:f6:a2 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    link/ether 00:00:5e:00:53:0a brd ff:ff:ff:ff:ff:ff link-netnsid 0
 mininet> ha ip route
 192.168.0.0/24 dev ha-eth0 proto kernel scope link src 192.168.0.1 
 mininet> ha ip neigh
 mininet> 
-
-# Host.B
-
-mininet> hb ip link show dev hb-eth0
-2: hb-eth0@if13: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP mode DEFAULT group default qlen 1000
-    link/ether ba:c1:e9:5e:45:0a brd ff:ff:ff:ff:ff:ff link-netnsid 0
-
-# Host.C
-
-mininet> hc ip link show dev hc-eth0
-2: hc-eth0@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP mode DEFAULT group default qlen 1000
-    link/ether 42:42:c7:33:c5:f4 brd ff:ff:ff:ff:ff:ff link-netns ra
-
 ```
+
+以降、L2 の動作は MAC アドレスを元に見ていきます。各インタフェースの IP アドレス・MAC アドレスの対応表が下の表のようになっていることを確認してください。
+* :customs: チュートリアル 2 の演習ネットワークでは表のように MAC アドレスを設定して固定しています。
+
+| Node   |Interface| IP address  | MAC address       |
+|--------|---------|-------------|-------------------|
+|Host.A  | ha-eth0 |192.168.0.1  |`00:00:5e:00:53:0a`|
+|Host.B  | hb-eth0 |192.168.0.2  |`00:00:5e:00:53:0b`|
+|Host.C  | hc-eth0 |192.168.0.3  |`00:00:5e:00:53:0c`|
 
 もし、ARP テーブルになにかデータが入っている場合は、以下のコマンドでクリアしてください。
 
@@ -149,15 +145,6 @@ ha ip neigh
 hb ip neigh
 hc ip neigh
 ```
-
-以降、L2 の動作は MAC アドレスを元に見ていくので、以下のような表を作っておくと追いかけやすくなります。(:white_check_mark: MAC アドレスは演習環境の起動時、毎回ランダムな値に設定されます。)
-
-| Node   |Interface| IP address  | MAC address       |
-|--------|---------|-------------|-------------------|
-|Host.A  | ha-eth0 |192.168.0.1  |`be:b7:5c:54:f6:a2`|
-|Host.B  | hb-eth0 |192.168.0.2  |`ba:c1:e9:5e:45:0a`|
-|Host.C  | hc-eth0 |192.168.0.3  |`42:42:c7:33:c5:f4`|
-
 
 L2 スイッチ (Switch.1) は IP アドレスを持ちません。L2 スイッチは L2 のデバイスなので、入ってくるパケットの L2 の情報 (送信元・先 MAC アドレス) だけを見て、パケットをどこに転送するかを決めています。そのため、宛先 MAC アドレスをどこのポートに送ればよいかを管理する MAC アドレステーブルを持っています。
 
@@ -206,7 +193,7 @@ root@nwtraining01:/#
 
 初期状態にした上で、Host.A から Host.B へ通信します。ノード間のやり取りと、各ノードが持つテーブルの情報を確認してみましょう。各ノードが何を見てどのような判断をするのかに着目してください。
 
-(Mininet ターミナル)　Host.A → Host.B への通信:
+(Mininet ターミナル) Host.A → Host.B への通信:
 
 ```shell
 ha ping -c3 192.168.0.2
@@ -216,9 +203,9 @@ Host.A-C の ARP テーブルの確認:
 
 ```text
 mininet> ha ip neigh
-192.168.0.2 dev ha-eth0 lladdr ba:c1:e9:5e:45:0a STALE  ...❹
+192.168.0.2 dev ha-eth0 lladdr 00:00:5e:00:53:0b STALE  ...❹
 mininet> hb ip neigh
-192.168.0.1 dev hb-eth0 lladdr be:b7:5c:54:f6:a2 STALE  ...❷
+192.168.0.1 dev hb-eth0 lladdr 00:00:5e:00:53:0a STALE  ...❷
 mininet> hc ip neigh
 mininet> 
 ```
@@ -228,8 +215,8 @@ Switch.1 の MAC アドレステーブルの確認:
 ```text
 mininet> sh ovs-appctl fdb/show sw1
  port  VLAN  MAC                Age
-    1     0  be:b7:5c:54:f6:a2  152  ...❶
-    2     0  ba:c1:e9:5e:45:0a  152  ...❸
+    1     0  00:00:5e:00:53:0a  152  ...❶
+    2     0  00:00:5e:00:53:0b  152  ...❸
 mininet> 
 ```
 
@@ -267,7 +254,7 @@ Host.A が送信した ARP request はまず Switch.1 に届きます。これ�
 
 ```text
  port  VLAN  MAC                Age
-    1     0  be:b7:5c:54:f6:a2  152  ...❶
+    1     0  00:00:5e:00:53:0a  152  ...❶
 ```
 
 ### (3) Host.C
@@ -284,7 +271,7 @@ Switch.1 がフラッディングした ARP request が届きました。"任意
 
 ```text
 mininet> hb ip neigh
-192.168.0.1 dev hb-eth0 lladdr be:b7:5c:54:f6:a2 STALE  ...❷
+192.168.0.1 dev hb-eth0 lladdr 00:00:5e:00:53:0a STALE  ...❷
 ```
 
 その上で応答 (**ARP reply**) を組み立て、宛先 (Host.A) に返信します。宛先がどの "座席番号" かはわかっているので、一意な宛先を設定したパケット (**ユニキャスト**) で送信します。
@@ -295,8 +282,8 @@ Host.B が送信した ARP reply は Switch.1 に届きます。Switch.1 から�
 
 ```text
  port  VLAN  MAC                Age
-    1     0  be:b7:5c:54:f6:a2  152  ...❶
-    2     0  ba:c1:e9:5e:45:0a  152  ...❸
+    1     0  00:00:5e:00:53:0a  152  ...❶
+    2     0  00:00:5e:00:53:0b  152  ...❸
 ```
 
 そして、Switch.1 は受取った ARP reply の宛先 "座席番号" を確認します。これは Host.A の MAC アドレスになっており、MAC アドレステーブルのエントリ❶とマッチします。
@@ -309,7 +296,7 @@ Host.B からの応答が Switch.1 経由で届きます。宛先 "座席番号"
 
 ```text
 mininet> ha ip neigh
-192.168.0.2 dev ha-eth0 lladdr ba:c1:e9:5e:45:0a STALE  ...❹
+192.168.0.2 dev ha-eth0 lladdr 00:00:5e:00:53:0b STALE  ...❹
 ```
 
 これで、ping を送るために必要な情報 = Host.B の "住所氏名" "座席番号" がわかりました。実際に ping パケットを送るのはここからになります。Host.C 宛に ping パケット (ICMP echo request) を送ります。
@@ -350,7 +337,7 @@ L2 の情報を管理するテーブル (ARP テーブル, MAC アドレステ�
 ```text
 mininet> sh ovs-appctl fdb/show sw1
  port  VLAN  MAC                Age
-    1     0  be:b7:5c:54:f6:a2  152
+    1     0  00:00:5e:00:53:0a  152
 ```
 
 なぜなら、"住所氏名" はルールに基づいて明示的に割り当てられますが、"座席番号" はそうでないからです。"部屋" の例で考えれば、いわば "フリーアドレス" で、同じ "住所氏名" の人が部屋を出入りしたり、座席を移動したりします。

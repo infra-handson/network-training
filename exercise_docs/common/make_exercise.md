@@ -196,10 +196,13 @@ npx md-to-pdf --config-file .md2pdf.js exercise_docs/**/*.md
     - インタフェース名 = オブジェクト識別子
     - mininet 的には全てのノードの名前が見えるので、`hostanme-ethX` の形で指定するのを推奨
     - __:warning: veth については使えない文字・最大長(15 文字)制限があります__
-  - `ip_addr`[optional]: String like IPv4/prefix-length (e.g. 192.168.0.1/24)
+  - `mac_addr`[optional]: String MAC address (e.g. `00:00:5e:00:53:00`)
+    - MAC アドレス
+    - インタフェースを持つノードが type `switch` **以外**の場合に有効
+    - インタフェースのタイプは `l2`/`l3` いずれに対しても設定可能。指定されない場合 (default) はランダムに MAC アドレスを設定
+  - `ip_addr`[optional]: String IPv4/prefix-length (e.g. `192.168.0.1/24`)
     - IP アドレス
-    - type `l3` のときは必須
-    - type `l2` のときは無視する
+    - インタフェースの type が `l3` のときは必須、`l2` のときは無視
   - `access_vlan`[optional]: Integer
     - アクセスポートの VLAN ID
     - インタフェースを持つノードが type `switch` のときのみ有効

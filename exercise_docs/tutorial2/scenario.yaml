@@ -6,12 +6,14 @@ nodes:
       - name: ha-eth0
         type: l3
         ip_addr: 192.168.0.1/24
+        mac_addr: 00:00:5E:00:53:0a
   - name: hb
     type: host
     interfaces:
       - name: hb-eth0
         type: l3
         ip_addr: 192.168.0.2/24
+        mac_addr: 00:00:5E:00:53:0b
   - name: sw1
     type: switch
     interfaces:
@@ -27,6 +29,7 @@ nodes:
       - name: hc-eth0
         type: l3
         ip_addr: 192.168.0.3/24
+        mac_addr: 00:00:5E:00:53:0c
 links:
   - node1: ha
     intf1: ha-eth0

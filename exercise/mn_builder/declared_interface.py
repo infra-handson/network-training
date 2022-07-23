@@ -9,6 +9,25 @@ class DeclaredIntfBase:
 
     __metaclass__ = ABCMeta
 
+    def __init__(self, intf_dict):
+        self._dict = intf_dict
+        self._mac_addr = self._dict["mac_addr"] if self.use_fixed_mac_addr else ""
+
+    @property
+    def name(self):
+        """interface name"""
+        return self._dict["name"]
+
+    @property
+    def use_fixed_mac_addr(self):
+        """check fixed mac-address to interface"""
+        return "mac_addr" in self._dict
+
+    @property
+    def mac_addr(self):
+        """interface mac address (empty-string means auto and random)"""
+        return self._mac_addr
+
     @property
     def is_valid_veth_name(self):
         """validate veth interface name"""
@@ -17,17 +36,13 @@ class DeclaredIntfBase:
 
         return True
 
-    @property
-    def name(self):
-        """interface name"""
-        return "interface name as string: must be override"
-
 
 class DeclaredTopologySubIntf(DeclaredIntfBase):
     """sub-interface class"""
 
     def __init__(self, sub_intf_dict):
-        self._dict = sub_intf_dict
+        # pylint: disable=super-with-arguments
+        super(DeclaredTopologySubIntf, self).__init__(sub_intf_dict)
         self._define_opt_property_name()
 
     def _define_opt_property_name(self):
@@ -62,7 +77,8 @@ class DeclaredTopologyIntf(DeclaredIntfBase):
     """Any type of interface for declared topology (topology definition)"""
 
     def __init__(self, intf_dict):
-        self._dict = intf_dict
+        # pylint: disable=super-with-arguments
+        super(DeclaredTopologyIntf, self).__init__(intf_dict)
         self._ip_addr = self._dict["ip_addr"] if self.is_l3 else ""
         self._access_vlan = self._dict["access_vlan"] if self.is_l2 and "access_vlan" in self._dict else 0
         self._trunk_vlans = self._dict["trunk_vlans"] if self.is_l2 and "trunk_vlans" in self._dict else []
@@ -76,11 +92,6 @@ class DeclaredTopologyIntf(DeclaredIntfBase):
         for sintf in self._dict["sub_interfaces"]:
             sintf["_parent_name_"] = self.name  # add parent interface name
         self._sub_interfaces = [DeclaredTopologySubIntf(sintf) for sintf in self._dict["sub_interfaces"]]
-
-    @property
-    def name(self):
-        """interface name"""
-        return self._dict["name"]
 
     @property
     def type(self):

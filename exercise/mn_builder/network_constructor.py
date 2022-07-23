@@ -103,6 +103,8 @@ class NetworkConstructor:
         for intf in node.interfaces:
             print("# %s%s" % (mn_host.name, intf))
             mn_intf = mn_host.intf(intf.name)
+            if intf.use_fixed_mac_addr:
+                mn_intf.setMAC(intf.mac_addr)
             if intf.is_l3:
                 mn_intf.setIP(intf.ip_addr)
             if intf.is_l2:
