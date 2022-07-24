@@ -55,6 +55,8 @@ cd /exercise
 
 ## L2スイッチの設定情報を確認する
 
+[チュートリアル 2](../tutorial2/scenario.md) では、スイッチのもつ MAC アドレステーブルとスイッチの基本動作を見ました。
+この後、スイッチの設定を変更してどのように動作をコントロールできるのかを見ていくので、スイッチの設定情報を確認してみましょう。
 スイッチは Open vSwitch というソフトウェアで構成されています。`ovs-vsctl show` (Shell ターミナル) で設定情報を確認できます。
 
 ```text
@@ -95,7 +97,8 @@ root@nwtraining01:/# ovs-vsctl show
   * 1 つのスイッチが 1 つの L2 セグメントになる
 * スイッチに対してポート (`Port`) が割り当てられている
 
-スイッチは[チュートリアル 2](../tutorial2/scenario.md) と同じくデフォルトの状態です。ひとつのスイッチ (`Bridge`) が単一の L2 ブロードキャストドメインとして動作しきます。(こうした動作を変化させるケースは[チュートリアル 4](../tutorial4/scenario.md) で扱います。)
+スイッチはチュートリアル 2 と同じくデフォルトの状態です。ひとつのスイッチ (`Bridge`) が単一の L2 ブロードキャストドメインとして動作しきます。
+* 設定を変えてスイッチの動作を変更する方法は[チュートリアル 4](../tutorial4/scenario.md) で扱います。
 
 :customs: Switch2 の用途について:
 * チュートリアル 3 では Switch2 は使用しません。
@@ -125,8 +128,8 @@ ha ip link show dev ha-eth0     # L2アドレス: MAC アドレスの確認
 |--------|---------|-------------|-------------------|
 |Host.A  | ha-eth0 |192.168.0.1  |`00:00:5e:00:53:0a`|
 |Host.B  | hb-eth0 |192.168.0.2  |`00:00:5e:00:53:0b`|
-|Host.C  | hc-eth0 |192.168.0.3  |`00:00:5e:00:53:0c`|
-|Host.D  | hc-eth0 |192.168.0.3  |`00:00:5e:00:53:0d`|
+|Host.C  | hc-eth0 |192.168.0.3 (重複) |`00:00:5e:00:53:0c`|
+|Host.D  | hc-eth0 |192.168.0.3 (重複) |`00:00:5e:00:53:0d`|
 
 各ノードの L2 ステーブルをクリアしておきます。
 
@@ -145,7 +148,7 @@ hc ip neigh
 hd ip neigh
 ```
 
-(Shell ターミナル) MAC アドレステーブルをクリア
+(Shell ターミナル) Switch.1 の MAC アドレステーブルをクリア
 
 ```shell
 # クリア
@@ -178,11 +181,11 @@ PING 192.168.0.2 (192.168.0.2) 56(84) bytes of data.
 --- 192.168.0.2 ping statistics ---
 3 packets transmitted, 3 received, 0% packet loss, time 2007ms
 rtt min/avg/max/mdev = 0.046/0.166/0.405/0.168 ms
-mininet> ha ip nei
+mininet> ha ip neigh
 ❶192.168.0.2 dev ha-eth0 lladdr ❷00:00:5e:00:53:0b REACHABLE
 ```
 
-[チュートリアル 2](../tutorial2/scenario.md) で確認たとおり、Host.A の ARP テーブルに、❶ IP アドレス (L3) と ❷ MAC アドレス (L2) の対応関係が登録されます。Shell ターミナルで実行したパケットキャプチャを確認してください。
+[チュートリアル 2](../tutorial2/scenario.md) でトレースしたとおり、Host.A の ARP テーブルに、❶ IP アドレス (L3) と ❷ MAC アドレス (L2) の対応関係が登録されます。Shell ターミナルで実行したパケットキャプチャを確認してください。
 
 ```text
 ...
@@ -216,7 +219,7 @@ root@nwtraining01:/# ip netns exec ha tcpdump -nle
 
 (Mininet ターミナル) ping Host.A → 192.168.0.3 (Host.C or Host.D)
 
-* いったん 192.168.0.3 についての ARP テーブルエントリをクリアしてから ping します
+* いったん Host.A の ARP テーブルエントリをクリアしてから ping します
 
 ```text
 mininet> ha ip neigh flush dev ha-eth0
@@ -235,7 +238,6 @@ rtt min/avg/max/mdev = 0.038/0.153/0.351/0.140 ms
 
 ```text
 mininet> ha ip neigh
-192.168.0.2 dev ha-eth0 lladdr   00:00:5e:00:53:0b STALE
 192.168.0.3 dev ha-eth0 lladdr ❶00:00:5e:00:53:0d REACHABLE
 ```
 
@@ -265,14 +267,15 @@ Host.A でとっていた、ping したときのパケットキャプチャも�
 
 (Mininet ターミナル) 通信できなかった側 (Host.C) から Host.A へ ping してみましょう。
 
+:bulb: 余裕があれば、以下の動作をパケットキャプチャで確認しながら追いかけてみてください。
+
 ```text
-# [1]
+# (1)
 
 mininet> ha ip neigh
-192.168.0.2 dev ha-eth0 lladdr   00:00:5e:00:53:0b STALE
 192.168.0.3 dev ha-eth0 lladdr ❺00:00:5e:00:53:0d STALE
 
-# [2]
+# (2)
 
 ininet> hc ping -c3 ha
 PING 192.168.0.1 (192.168.0.1) 56(84) bytes of data.
@@ -280,13 +283,12 @@ PING 192.168.0.1 (192.168.0.1) 56(84) bytes of data.
 --- 192.168.0.1 ping statistics ---
 3 packets transmitted, 0 received, ❻100% packet loss, time 2053ms
 
-# [3]
+# (3)
 
 mininet> ha ip neigh
-192.168.0.2 dev ha-eth0 lladdr   00:00:5e:00:53:0b STALE
-192.168.0.3 dev ha-eth0 lladdr ❼00:00:5e:00:53:0c STALE
+192.168.0.3 dev ha-eth0 lladdr ❾00:00:5e:00:53:0c STALE
 
-# [4]
+# (4)
 
 mininet> hc ping -c3 ha
 PING 192.168.0.1 (192.168.0.1) 56(84) bytes of data.
@@ -295,14 +297,22 @@ PING 192.168.0.1 (192.168.0.1) 56(84) bytes of data.
 64 bytes from 192.168.0.1: icmp_seq=3 ttl=64 time=0.046 ms
 
 --- 192.168.0.1 ping statistics ---
-3 packets transmitted, 3 received, ❽0% packet loss, time 2033ms
+3 packets transmitted, 3 received, ❿0% packet loss, time 2033ms
 rtt min/avg/max/mdev = 0.046/0.145/0.260/0.088 ms
 ```
 
-1. 前提条件として、Host.A の ARP テーブルでは、192.168.0.3 を ❺ Host.D (`...:0d`) へ送るようになっています
-2. そのため、Host.C から Host.A へ ping request を送ると、ping reply は Host.A から Host.D に送信されます。Host.C は応答を受信できずに、❻ 100％ packet loss となります。
-3. その後、Host.A で再度 ARP テーブルを確認すると 192.168.0.3 が ❼ Host.C (`...:0c`) の MAC アドレスに変わっています。 (2. ping に際して Host.C - Host.A の ARP 更新が行なわれる)
-4. この状態であれば、Host.C から Host.A への ping は正しく送受信できます(❽)
+(1): 前提条件として、Host.A の ARP テーブルでは、192.168.0.3 を ❺ Host.D (`...:0d`) へ送るようになっています
+
+(2): そのため、Host.C から Host.A へ ping request を送る(❼)と、ping reply は Host.A から Host.D に送信されます(❽)。Host.C は応答を受信できずに、❻ 100％ packet loss となります。
+
+```text
+00:14:57.748323 ❼00:00:5e:00:53:0c > 00:00:5e:00:53:0a, ethertype IPv4 (0x0800), length 98: 192.168.0.3 > 192.168.0.1: ICMP echo request, id 452, seq 1, length 64
+00:14:57.748342 ❽00:00:5e:00:53:0a > 00:00:5e:00:53:0d, ethertype IPv4 (0x0800), length 98: 192.168.0.1 > 192.168.0.3: ICMP echo reply, id 452, seq 1, length 64
+```
+
+(3): その後、Host.A で再度 ARP テーブルを確認すると 192.168.0.3 が ❾ Host.C (`...:0c`) の MAC アドレスに変わっています。 (2. ping に際して Host.C - Host.A の ARP 更新が行なわれる)
+
+(4): この状態であれば、Host.C から Host.A への ping は正しく送受信できます(❿)。
 
 このように、同じブロードキャストドメインの中で IP アドレスが重複する場合、通信先が ARP 応答や ARP テーブルエントリの変化のタイミングなどで変わってしまい、非常に不安定な状態になります。([チュートリアル 2](../tutorial2/scenario.md) で解説したとおり、ARP テーブルのエントリは使用されない場合一定時間で消えます。)
 

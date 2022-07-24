@@ -89,7 +89,10 @@ Previous << [Index](../index.md) >> [Next](../tutorial1/scenario.md)
 
 ### 作業ディレクトリへの移動
 
-現在のディレクトリが `~/network-training` になっていない場合はこのディレクトリへ移動してください。
+用意した 2 面のターミナルのどちらも、現在のディレクトリが `~/network-training` になっていない場合はこのディレクトリへ移動してください。
+
+* チュートリアル・演習用の環境はコンテナとして提供されます。
+* :warning: コンテナ操作 (`docker-compose` コマンド) をするには、設定ファイル ([docker-compose.yml](/docker-compose.yml)) がある `~/network-training` ディレクトリにいる必要があります。
 
 ```shell
 cd ~/network-training
@@ -124,6 +127,16 @@ docker-compose --compatibility up -d
 # --compatibility オプションがない場合 WARNING が出るかもしれませんが無視してください
 root@nwtraining01:/#
 ```
+
+<details>
+
+<summary>コンテナに「入る」とは?</summary>
+
+:bulb: コンテナに「入る」としていますが、正確には、コンテナとして区切られたアプリケーション実行用の空間で shell プロセスを実行しています。プロセス (bash) は Linux OS 上で動作しますが、プロセスに見える OS 上の計算機リソースが限定されています。
+
+コンテナ内でプロセスを実行するとこで、そのコンテナ内 (限定された、仮想的なプロセス実行用の空間) のなかで通常の対話的なコマンド実行ができます。あたかも、仮想マシン (ホスト OS 上のリソースの一部を使う別の OS) の中で操作しているかのように見えます。
+
+</details>
 
 ### 起動
 
@@ -188,7 +201,8 @@ root@nwtraining01:/exercise#
 * 演習環境操作の基本
   * ブラウザから演習環境にアクセスする
   * Code-server (VSCode) の操作方法
-  * 演習ネットワークの起動・停止
+  * ターミナルの表示と呼称の設定
+  * 演習ネットワークの起動・停止・リセット
 
 チュートリアル 0 はここまでです。演習ネットワークを終了させて[チュートリアル 1](../tutorial1/scenario.md) に進んでください。
 

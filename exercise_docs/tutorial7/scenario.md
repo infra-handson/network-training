@@ -390,8 +390,9 @@ num   pkts bytes target     prot opt in     out     source               destina
 Chain FORWARD (policy DROP 0 packets, 0 bytes)
 num   pkts bytes target     prot opt in     out     source               destination         
 1        4   336 ACCEPT     icmp --  *      *       0.0.0.0/0            0.0.0.0/0           
-2        6   645 ACCEPT     all  --  *      *       0.0.0.0/0            0.0.0.0/0            state RELATED,ESTABLISHED
-3      ❷1  ❸60 REJECT     tcp  --  *      *       192.168.0.0/24       172.16.0.2           tcp dpt:8000 reject-with icmp-port-unreachable
+2      ❷1  ❸60 REJECT     tcp  --  *      *       192.168.0.0/24       172.16.0.2           tcp dpt:8000 reject-with 
+3        6   645 ACCEPT     all  --  *      *       0.0.0.0/0            0.0.0.0/0            state RELATED,ESTABLISHED
+icmp-port-unreachable
 
 Chain OUTPUT (policy ACCEPT 1 packets, 88 bytes)
 num   pkts bytes target     prot opt in     out     source               destination         

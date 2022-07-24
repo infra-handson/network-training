@@ -107,6 +107,7 @@ mininet> ra ip route
 (Mininet ターミナル) Host.A の経路情報設定
 
 ```text
+# Host.B サブネット(172.16.0.0/24)宛パケットを Router.A (192.168.0.254) に中継してもらう
 mininet> ha ip route add 172.16.0.0/24 via 192.168.0.254
 mininet> ha ip route
 172.16.0.0/24 via 192.168.0.254 dev ha-eth0 
@@ -122,9 +123,6 @@ mininet> ha ping -c3 172.16.0.2
 ```
 
 Router.A の反対側 (ra-eth1) までは応答がありますが、Host.B については応答がありません。今回は "Network is unreachable" (そもそもパケットを送付できていない) ではなく、ping パケットを送付しているものの応答がない状態です。
-
-* Router.A の宛先セグメント側のインタフェース (ra-eth1) から応答がある時点で、Host.A は宛先セグメントへのパケットを正しく Router.A に送付できている。
-* Host.B から応答がないのは、Host.B が Host.A へ返信する際、応答パケットをどこに送ればよいのか ("郵便局役") の情報を持っていないためです。
 
 Host.B のパケットキャプチャを見ながら、再度 Host.A → Host.B への ping を行ってみます。
 
@@ -155,7 +153,11 @@ PING 172.16.0.2 (172.16.0.2) 56(84) bytes of data.
 ...
 ```
 
-Host.B は ping (ICMP echo) request を受信しているものの、reply を返していません。これは、Host.A に返信するとき、誰に中継してもらえばよいか Host.B はわからないためです。(Host.B → Host.A はまだ何も設定していないので "Network is unreachable" のまま)
+Host.B は ping (ICMP echo) request を受信しているものの、reply を返していません。
+
+* Router.A の宛先セグメント側のインタフェース (ra-eth1) から応答がある時点で、Host.A は宛先セグメントへのパケットを正しく Router.A に送付できている。
+* Host.B から応答がないのは、Host.B が Host.A へ返信する際、応答パケットをどこに送ればよいのか ("郵便局役") の情報を持っていないためです。この時点で Host.B は、Host.A に返信するとき、誰に中継してもらえばよいか知りません。(Host.B → Host.A はまだ何も設定していないので "Network is unreachable" のまま。)
+
 
 ここからわかるのは、パケットの行きの経路と戻りの経路の判断は独立して行われる、ということです。
 
@@ -206,6 +208,7 @@ ra -> ha hb
 * ルータ(ルーティング): 異なる L3 サブネット間通信の基本動作
   * 経路情報の確認
   * 経路情報の設定
+  * デフォルトルート
   * 行きと戻りの経路を考える必要があること
 
 チュートリアル 5 はここまでです。演習ネットワークを終了させて[チュートリアル 6](../tutorial6/scenario.md) に進んでください。
