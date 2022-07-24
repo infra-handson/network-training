@@ -25,6 +25,7 @@
 - [チュートリアル 3](../tutorial3/scenario.md): L2 基礎 (2)
 - [チュートリアル 4](../tutorial4/scenario.md): L2 VLAN
 - [チュートリアル 5](../tutorial5/scenario.md): L3 基礎
+- [チュートリアル 6](../tutorial6/scenario.md): L2/L3 連携
 
 この問題で知ってほしいこと :
 
@@ -56,9 +57,11 @@
 * スイッチの設定確認
   * スイッチ・ポートの設定確認
     * `ovs-vsctl show`
+  * インタフェース名とポート番号の対応確認
+    * `ovs-dpctl show`
 * スイッチの状態確認
   * MAC アドレステーブル確認
-    * `ovs-appctl sh ovs-appctl fdb/show スイッチ名`
+    * `ovs-appctl fdb/show スイッチ名`
 
 </details>
 
