@@ -281,7 +281,7 @@ ininet> hc ping -c3 ha
 PING 192.168.0.1 (192.168.0.1) 56(84) bytes of data.
 
 --- 192.168.0.1 ping statistics ---
-3 packets transmitted, 0 received, ❻100% packet loss, time 2053ms
+3 packets transmitted, 0 received, ❽100% packet loss, time 2053ms
 
 # (3)
 
@@ -303,14 +303,14 @@ rtt min/avg/max/mdev = 0.046/0.145/0.260/0.088 ms
 
 (1): 前提条件として、Host.A の ARP テーブルでは、192.168.0.3 を ❺ Host.D (`...:0d`) へ送るようになっています
 
-(2): そのため、Host.C から Host.A へ ping request を送る(❼)と、ping reply は Host.A から Host.D に送信されます(❽)。Host.C は応答を受信できずに、❻ 100％ packet loss となります。
+(2): そのため、Host.C から Host.A へ ping request を送る(❻)と、ping reply は Host.A から Host.D に送信されます(❼)。Host.C は応答を受信できずに、❽ 100％ packet loss となります。
 
 ```text
-00:14:57.748323 ❼00:00:5e:00:53:0c > 00:00:5e:00:53:0a, ethertype IPv4 (0x0800), length 98: 192.168.0.3 > 192.168.0.1: ICMP echo request, id 452, seq 1, length 64
-00:14:57.748342 ❽00:00:5e:00:53:0a > 00:00:5e:00:53:0d, ethertype IPv4 (0x0800), length 98: 192.168.0.1 > 192.168.0.3: ICMP echo reply, id 452, seq 1, length 64
+00:14:57.748323 ❻00:00:5e:00:53:0c > 00:00:5e:00:53:0a, ethertype IPv4 (0x0800), length 98: 192.168.0.3 > 192.168.0.1: ICMP echo request, id 452, seq 1, length 64
+00:14:57.748342 ❼00:00:5e:00:53:0a > 00:00:5e:00:53:0d, ethertype IPv4 (0x0800), length 98: 192.168.0.1 > 192.168.0.3: ICMP echo reply, id 452, seq 1, length 64
 ```
 
-(3): その後、Host.A で再度 ARP テーブルを確認すると 192.168.0.3 が ❾ Host.C (`...:0c`) の MAC アドレスに変わっています。 (2. ping に際して Host.C - Host.A の ARP 更新が行なわれる)
+(3): その後、Host.A で再度 ARP テーブルを確認すると 192.168.0.3 が ❾ Host.C (`...:0c`) の MAC アドレスに変わっています。 ((2) ping に際して Host.C - Host.A の ARP 更新が行なわれる)
 
 (4): この状態であれば、Host.C から Host.A への ping は正しく送受信できます(❿)。
 
