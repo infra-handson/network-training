@@ -18,6 +18,7 @@ from declared_node import DeclaredTopologyNode
 # pylint: disable=import-error
 from declared_link import DeclaredTopologyLink
 
+
 # pylint: disable=too-many-ancestors
 class MyDumper(yaml.Dumper):
     """

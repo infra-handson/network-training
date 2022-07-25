@@ -48,6 +48,11 @@ Previous << [Index](../index.md) >> [Next](../l2nw1/answer.md)
   * `ip neigh`
 * パケットキャプチャ (ARP Request の確認)
   * `tcpdump -l [-i インタフェース名]` : オプション `-l` がないとリアルタイムに表示されません。
+* スイッチの設定確認
+  * スイッチ・ポートの設定確認
+    * `ovs-vsctl show`
+  * インタフェース名とポート番号の対応確認
+    * `ovs-dpctl show`
 * スイッチの状態確認
   * MAC アドレステーブル確認
     * `ovs-appctl sh ovs-appctl fdb/show スイッチ名`

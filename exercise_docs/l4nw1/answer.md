@@ -8,6 +8,8 @@
 
 - [L4NW-1 (解説編)](#l4nw-1-解説編)
   - [問題1](#問題1)
+    - [No.4/8 について](#no48-について)
+    - [No.7 について](#no7-について)
   - [問題2](#問題2)
     - [Server.A2サーバプロセスの修正](#servera2サーバプロセスの修正)
     - [L3経路の修正](#l3経路の修正)
@@ -44,16 +46,11 @@
   * No.7 は L3 の問題です: そもそも Host.C → 192.168.0.6 にパケットが到達できていない
 * 各事象の具体的な原因については問題 2 で解説します。
 
-No.4/8
+### No.4/8 について
 
-1. パケットは到達します (L3 までは ok)
-2. Server.A2 では `--bind` オプションつきでサーバが起動しています。これは、サーバプロセスが listen するアドレスを指定するオプションです。
-    * 参照: [http.server --- HTTP サーバ — Python 3.9.4 ドキュメント](https://docs.python.org/ja/3/library/http.server.html)
-3. `ss` コマンドでも listen しているアドレスが限定されていることがわかります。
-    * Server.A1 では listen しているアドレスが 0.0.0.0 となっています。これは「任意の IP アドレス」を指します (そのホストが持っている全ての IP アドレスで listen する。)
+パケットは到達します (L3 までは ok)
 
-```test
-mininet> # [1]
+```text
 mininet> hb ping -c1 192.168.0.14
 PING 192.168.0.14 (192.168.0.14) 56(84) bytes of data.
 64 bytes from 192.168.0.14: icmp_seq=1 ttl=63 time=0.048 ms
@@ -70,29 +67,40 @@ PING 192.168.0.14 (192.168.0.14) 56(84) bytes of data.
 1 packets transmitted, 1 received, 0% packet loss, time 0ms
 rtt min/avg/max/mdev = 0.055/0.055/0.055/0.000 ms
 mininet> 
-mininet> # [2]
+```
+
+サーバプロセスの設定を確認してみます。Server.A1 では特にオプション指定がありませんが(❶)、Server.A2 では `--bind` オプションつきでサーバが起動しています(❷)。これは、サーバプロセスが listen するアドレスを指定するオプションです。
+* :bulb: [http.server --- HTTP サーバ — Python 3.9.4 ドキュメント](https://docs.python.org/ja/3/library/http.server.html)
+
+```text
 mininet> sa1 ps -o pid,args
     PID COMMAND
    4635 bash --norc -is mininet:sa1
-   4690 python3 -m http.server 8080 -d /exercise/l4nw1/docroot-sa1
+   4690 python3 -m http.server 8080 -d /exercise/l4nw1/docroot-sa1  ...❶
    4740 ps -o pid,args
 mininet> sa2 ps -o pid,args --width 100
     PID COMMAND
    4637 bash --norc -is mininet:sa2
-   4696 python3 -m http.server 8080 -d /exercise/l4nw1/docroot-sa2 --bind 192.168.0.6
+   4696 python3 -m http.server 8080 -d /exercise/l4nw1/docroot-sa2 --bind 192.168.0.6  ...❷
    4742 ps -o pid,args --width 100
 mininet> 
-mininet> # [3]
-mininet> sa1 ss -ltn
-State    Recv-Q   Send-Q     Local Address:Port     Peer Address:Port  Process  
-LISTEN   0        5                0.0.0.0:8080          0.0.0.0:*
-mininet> sa2 ss -ltn
-State    Recv-Q   Send-Q     Local Address:Port     Peer Address:Port  Process  
-LISTEN   0        5            192.168.0.6:8080          0.0.0.0:*
 ```
 
-No.7
-* パケットが到達していません (L3 の時点で問題がある)
+`ss` コマンドでもサーバプロセスが listen しているアドレスが限定されていることがわかります。
+* Server.A1 では listen しているアドレスが 0.0.0.0 となっています。これは「任意の IP アドレス」を指します (そのホストが持っている全ての IP アドレスで listen する。)
+
+```text
+mininet> sa1 ss -ltn
+State    Recv-Q   Send-Q     Local Address:Port     Peer Address:Port  Process  
+LISTEN   0        5              ❶0.0.0.0:8080          0.0.0.0:*
+mininet> sa2 ss -ltn
+State    Recv-Q   Send-Q     Local Address:Port     Peer Address:Port  Process  
+LISTEN   0        5          ❷192.168.0.6:8080          0.0.0.0:*
+```
+
+### No.7 について
+
+パケットが到達していません (L3 の時点で問題がある)
 
 ```text
 mininet> hc ping -c1 192.168.0.6

@@ -76,27 +76,14 @@ ha ip -4 addr show dev ha-eth0  # L3アドレス: IP アドレスの確認
 ha ip link show dev ha-eth0     # L2アドレス: MAC アドレスの確認
 ha ip route                     # L3テーブル: ルーティングテーブルの確認
 ha ip neigh                     # L2テーブル: ARP テーブルの確認
-# Host.B
-hb ip -4 addr show dev hb-eth0
-hb ip link show dev hb-eth0
-hb ip route
-hb ip neigh
-# Router.A
-ra ip -4 addr show
-ra ip link show
-ra ip addr
-ra ip neigh
-# Host.C
-hc ip -4 addr show dev hc-eth0
-hc ip link show dev hc-eth0
-hc ip route
-hc ip neigh
 ```
 
-実行結果は以下のようになります (一部省略しています)。初期状態 (まだ何も通信をしていない状態) では、ARP テーブルは空になります。
+実行結果は以下のようになります (Host.A 分 + Router.A について記載: その他のノードについてもそれぞれ確認してください)。
+初期状態 (まだ何も通信をしていない状態) では、ARP テーブルは空になります。
+空になっていない場合は後述するコマンドでクリアしてください。
 
 ```text
-# Host.A
+# Host.A (Host.B/C も同様)
 
 mininet> ha ip -4 addr show dev ha-eth0
 2: ha-eth0@if12: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000 link-netnsid 0
@@ -109,35 +96,24 @@ mininet> ha ip route
 default via 192.168.0.254 dev ha-eth0 
 192.168.0.0/24 dev ha-eth0 proto kernel scope link src 192.168.0.1 
 mininet> ha ip neigh
-mininet> 
-
-# Host.B
-
-mininet> hb ip link show dev hb-eth0
-2: hb-eth0@if13: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP mode DEFAULT group default qlen 1000
-    link/ether ba:c1:e9:5e:45:0a brd ff:ff:ff:ff:ff:ff link-netnsid 0
 
 # Router.A
 
-mininet> ra ip link show
-1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
-    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-2: ra-eth1@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP mode DEFAULT group default qlen 1000
-    link/ether de:32:31:1d:b8:7d brd ff:ff:ff:ff:ff:ff link-netns hc
-3: ra-eth0@if14: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP mode DEFAULT group default qlen 1000
-    link/ether 0a:44:a8:86:8a:20 brd ff:ff:ff:ff:ff:ff link-netnsid 1
 mininet> ra ip route
 172.16.0.0/24 dev ra-eth1 proto kernel scope link src 172.16.0.254 
 192.168.0.0/24 dev ra-eth0 proto kernel scope link src 192.168.0.254 
-mininet> ra ip neigh
-mininet> 
-
-# Host.C
-
-mininet> hc ip link show dev hc-eth0
-2: hc-eth0@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP mode DEFAULT group default qlen 1000
-    link/ether 42:42:c7:33:c5:f4 brd ff:ff:ff:ff:ff:ff link-netns ra
 ```
+
+以降、各ノードの動作を IP アドレス・MAC アドレスをつかって見ていきます。各インタフェースの IP アドレス・MAC アドレスの対応表が下の表のようになっていることを確認してください。
+* :customs: チュートリアル 6 の演習ネットワークでは表のように MAC アドレスを設定して固定しています。
+
+| Node   |Interface| IP address  | MAC address       |
+|--------|---------|-------------|-------------------|
+|Host.A  | ha-eth0 |192.168.0.1  |`00:00:5e:00:53:0a`|
+|Host.B  | hb-eth0 |192.168.0.2  |`00:00:5e:00:53:0b`|
+|Host.C  | hc-eth0 |192.168.0.3  |`00:00:5e:00:53:0c`|
+|Router.A| ra-eth0 |192.168.0.254|`00:00:5e:00:53:10`|
+|Router.A| ra-eth1 |192.168.0.254|`00:00:5e:00:53:20`|
 
 もし、ARP テーブルになにかデータが入っている場合は、以下のコマンドでクリアしてください。
 
@@ -154,16 +130,6 @@ hb ip neigh
 hc ip neigh
 ra ip neigh
 ```
-
-以降、L2 の動作は MAC アドレスを元に見ていくので、以下のような表を作っておくと追いかけやすくなります。(:white_check_mark: MAC アドレスは演習環境の起動時、毎回ランダムな値に設定されます。)
-
-|Node    |Interface|IP address   |MAC address        |
-|--------|---------|-------------|-------------------|
-|Host.A  | ha-eth0 |192.168.0.1  |`be:b7:5c:54:f6:a2`|
-|Host.B  | hb-eth0 |192.168.0.2  |`ba:c1:e9:5e:45:0a`|
-|Router.A| ra-eth0 |192.168.0.254|`0a:44:a8:86:8a:20`|
-|Router.A| ra-eth1 |172.16.0.254 |`de:32:31:1d:b8:7d`|
-|Host.C  | hc-eth0 |172.16.0.1   |`42:42:c7:33:c5:f4`|
 
 (Shell ターミナル) Switch.1 のポート番号の確認 (OS 上のインタフェース名と、スイッチ内部で扱うポート番号の対応)
 
@@ -221,13 +187,13 @@ Host.A-C, Router.A の ARP テーブルの確認:
 
 ```text
 mininet> ha ip neigh
-192.168.0.254 dev ha-eth0 lladdr 0a:44:a8:86:8a:20 STALE ...❹
+192.168.0.254 dev ha-eth0 lladdr 00:00:5e:00:53:10 REACHABLE ...❹
 mininet> hb ip neigh
 mininet> hc ip neigh
-172.16.0.254 dev hc-eth0 lladdr de:32:31:1d:b8:7d STALE  ...❺
+172.16.0.254 dev hc-eth0 lladdr 00:00:5e:00:53:20 REACHABLE  ...❺
 mininet> ra ip neigh
-172.16.0.1 dev ra-eth1 lladdr 42:42:c7:33:c5:f4 STALE    ...❻
-192.168.0.1 dev ra-eth0 lladdr be:b7:5c:54:f6:a2 STALE   ...❷
+192.168.0.1 dev ra-eth0 lladdr 00:00:5e:00:53:0a REACHABLE   ...❷
+172.16.0.1 dev ra-eth1 lladdr 00:00:5e:00:53:0c REACHABLE    ...❻
 mininet> 
 ```
 
@@ -236,8 +202,8 @@ Switch.1 の MAC アドレステーブルの確認:
 ```text
 mininet> sh ovs-appctl fdb/show sw1
  port  VLAN  MAC                Age
-    1     0  be:b7:5c:54:f6:a2   59  ...❶
-    3     0  0a:44:a8:86:8a:20   59  ...❸
+    3     0  00:00:5e:00:53:10  205  ...❸
+    1     0  00:00:5e:00:53:0a  164  ...❶
 ```
 
 どのノードが何を見てどのようにパケットを送信（転送）しているのかをトレースします。シーケンス図と合わせて動作をトレースしてみてください。
@@ -261,14 +227,13 @@ default via 192.168.0.254 dev ha-eth0
 
 ### (2) Switch.1
 
-Host.A からの ARP request を受信したときの動作は[チュートリアル 2](../tutorial2/scenario.md#2-switch1)のときと同様です。
-Switch.1 の MAC アドレステーブルにエントリを追加し、ARP request をフラッディングします。
+Host.A からの ARP request が届いたので Switch.1 の MAC アドレステーブルにエントリ❶を追加し、ARP request をフラッディングします。
 * スイッチのポート番号については、[準備・初期状態の確認](#準備・初期状態の確認)の "Switch.1 のポート番号の確認" 参照
 
 ```text
 mininet> sh ovs-appctl fdb/show sw1
  port  VLAN  MAC                Age
-    1     0  be:b7:5c:54:f6:a2   59  ...❶
+    1     0  00:00:5e:00:53:0a  164  ...❶
 ```
 
 ### (3) Host.B
@@ -277,11 +242,11 @@ Switch.1 がフラッディングした ARP request が届きましたが、自�
 
 ### (4) Router.A
 
-Switch.1 がフラッディングした ARP request が届きました。自分が持つ IP アドレスについて尋ねられているので、自身の ARP テーブルに以下のエントリを追加して、ARP reply を送信します。([チュートリアル 2](../tutorial2/scenario.md#4-hostb) 参照)
+Switch.1 がフラッディングした ARP request が届きました。自分が持つ IP アドレスについて尋ねられているので、自身の ARP テーブルに Host.A のエントリ❷を追加して、ARP reply を送信します。
 
 ```text
 mininet> ra ip neigh
-192.168.0.1 dev ra-eth0 lladdr be:b7:5c:54:f6:a2 STALE  ...❷
+192.168.0.1 dev ra-eth0 lladdr 00:00:5e:00:53:0a REACHABLE   ...❷
 ```
 
 ### (5) Switch.1
@@ -290,17 +255,17 @@ Router.A が返した ARP reply を見て、自身の MAC アドレステーブ�
 
 ```text
  port  VLAN  MAC                Age
-    1     0  be:b7:5c:54:f6:a2   59  ...❶
-    3     0  0a:44:a8:86:8a:20   59  ...❸
+    3     0  00:00:5e:00:53:10  205  ...❸
+    1     0  00:00:5e:00:53:0a  164  ...❶
 ```
 
 ### (6) Host.A
 
-192.168.0.1 (デフォルトゲートウェイ) の "座席番号" がわかったので、自身の ARP テーブルにエントリ❹を登録し、ping パケットを送信します。
+Router.A の ARP reply を受信し、自身の ARP テーブルにエントリ❹を登録します。192.168.0.1 (デフォルトゲートウェイ) の "座席番号" がわかったので、Host.C 宛の ping パケットを送信します。
 
 ```text
 mininet> ha ip neigh
-192.168.0.254 dev ha-eth0 lladdr 0a:44:a8:86:8a:20 STALE ...❹
+192.168.0.254 dev ha-eth0 lladdr 00:00:5e:00:53:10 REACHABLE ...❹
 ```
 
 ### (7) Switch.1
@@ -327,7 +292,7 @@ mininet> ra ip route
 
 ```text
 mininet> hc ip neigh
-172.16.0.254 dev hc-eth0 lladdr de:32:31:1d:b8:7d STALE ...❺
+172.16.0.254 dev hc-eth0 lladdr 00:00:5e:00:53:20 REACHABLE  ...❺
 ```
 
 ### (10) Router.A
@@ -336,8 +301,8 @@ Router.A は Host.C の ARP reply を受信し、自身の ARP テーブルに�
 
 ```text
 mininet> ra ip neigh
-172.16.0.1 dev ra-eth1 lladdr 42:42:c7:33:c5:f4 STALE   ...❻
-192.168.0.1 dev ra-eth0 lladdr be:b7:5c:54:f6:a2 STALE  ...❷
+192.168.0.1 dev ra-eth0 lladdr 00:00:5e:00:53:0a REACHABLE   ...❷
+172.16.0.1 dev ra-eth1 lladdr 00:00:5e:00:53:0c REACHABLE    ...❻
 ```
 
 Host.C の "座席番号" がわかりました。Host.A から送られてきた ping パケットの送信元・先 "座席番号" を Router.A (ra-eth1)・Host.C (hc-eth0) に変更し、送信します。
@@ -348,7 +313,7 @@ Host.C は ping パケット(要求; echo request) を受け取り、ping パケ
 
 ### (12) Router.A
 
-Router.A は Host.C からの応答パケットの宛先 "住所氏名" = IP アドレスをルーティングテーブルで照合し、転送先を決めます。ルーティングテーブルでは 192.168.0.0/24 は ra-eth0 に直結されている "部屋" であることがわかります。ARP テーブルで宛先 IP アドレスを検索するとエントリ❷が見つかります。Router.A はみつかったエントリに❷従って、パケットの送信元・先 "座席番号" を Router.A (ra-eth0)・Host.A (ha-eth0) に変更したうえで転送します。
+Router.A は Host.C からの応答パケットの宛先 "住所氏名" = IP アドレスをルーティングテーブルで照合し、転送先を決めます。ルーティングテーブルでは 192.168.0.0/24 は ra-eth0 に直結されている "部屋" であることがわかります。ARP テーブルで宛先 IP アドレスを検索するとエントリ❷が見つかります。Router.A はみつかったエントリ❷に従って、パケットの送信元・先 "座席番号" を Router.A (ra-eth0)・Host.A (ha-eth0) に変更したうえで転送します。
 
 ### (13) Switch.1
 
@@ -369,7 +334,7 @@ Switch.1 が転送した ping 応答が届きます。これで 1 回の往復�
 
 <summary>マッチするルーティングテーブルエントリがない場合の動作</summary>
 
-[マッチするルーティングテーブルエントリがない場合の動作](#マッチするルーティングテーブルエントリがない場合の動作) では L2 テーブルで宛先に対応する情報が見つからない場合を説明しました。同様に、L3 テーブル = ルーティングテーブルで、宛先に対応する情報が見つからない場合はどのように動作するのでしょうか?
+[チュートリアル 2: マッチする MAC アドレステーブルエントリがない場合の動作](../tutorial2/scenario.md#マッチする-mac-アドレステーブルエントリがない場合の動作) では L2 テーブルで宛先に対応する情報が見つからない場合を説明しました。同様に、L3 テーブル = ルーティングテーブルで、宛先に対応する情報が見つからない場合はどのように動作するのでしょうか?
 
 例えば、Router.A はデフォルトルートを持っていませんでした。Router.A に 10.0.0.1 など不明なエントリのパケットが届いた場合、結論からいうと Router.A はそのパケットを破棄します。こうした動作は演習 [L3NW-2](../l3nw2/question.md) などで実際に確認していきます。
 

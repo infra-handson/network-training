@@ -15,7 +15,7 @@ nodes:
       - dst_net: default
         next_hop: 172.16.0.254
     svc_procs:
-      - python3 -m http.server 8000 -d /exercise/tutorial5/docroot-hb &
+      - python3 -m http.server 8000 -d /exercise/tutorial7/docroot-hb &
     interfaces:
       - name: hb-eth0
         type: l3
@@ -23,7 +23,7 @@ nodes:
   - name: fa
     type: router
     svc_procs:
-      - sh /exercise/tutorial5/fa_fw.sh
+      - sh /exercise/tutorial7/fa_fw.sh
     interfaces:
       - name: fa-eth0
         type: l3

@@ -183,10 +183,11 @@ Mininet CLI では同時に 1 つのノードしか操作できないため、�
 
 以下の順序で操作します。
 
-1. Mininet CLI で ping コマンドを実行します: `ha ping 192.168.0.2`
-    - `-c` オプションをつけずに実行しつづけてください。
 1. Shell ターミナルで `ip netns exec hb tcpdump -l -i hb-eth0` コマンドを実行して通信が実行されていることを確認してください。
     - :warning: `-l` オプション (Make stdout line buffered) がないと出力がバッファリングされてリアルタイムに表示されません。
+1. Mininet CLI で ping コマンドを実行します: `ha ping 192.168.0.2`
+    - `-c` オプションをつけずに実行しつづけてください。
+1. Shell ターミナル (tcpdump) で通信(パケットのやり取り)が表示されることを確認してください。ここでは Host.B のインタフェース (hb-eth0) を出入りするパケットを表示しています。
 1. Mininet CLI, Shell ターミナルでそれぞれ `Ctrl-c` を入力して、`ping` および `tcpdump` の実行を停止します。
 
 ![Packet capture](tcpdump.png)

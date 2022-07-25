@@ -82,6 +82,8 @@ class LinuxHost(Node):
             "ip link add link %s name %s type vlan protocol 802.1Q id %d"
             % (sub_intf.parent_intf_name, sub_intf.name, sub_intf.vlan)
         )
+        if sub_intf.use_fixed_mac_addr:
+            self.cmd("ip link set dev %s address %s" % (sub_intf.name, sub_intf.mac_addr))
         self.cmd("ip addr add %s dev %s" % (sub_intf.ip_addr, sub_intf.name))
         self.cmd("ip link set %s up" % sub_intf.name)
 

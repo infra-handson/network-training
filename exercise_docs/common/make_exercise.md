@@ -163,82 +163,87 @@ npx md-to-pdf --config-file .md2pdf.js exercise_docs/**/*.md
 
 演習ネットワーク定義ファイルのデータ構造
 
-- `nodes`: Array\<Node\>
-- `links`: Array\<Link\>
-- Node:
-  - `type` : String in[`host`, `router`, `switch`])
+- `nodes`: _Array\<Node\>_
+- `links`: _Array\<Link\>_
+- _Node_:
+  - `type` : _String_ in[`host`, `router`, `switch`])
     - ノードの種別
     - `host` は linux node
     - `router` は ipv4 forwarding を有効にした linux node
     - `switch` は Open vSwitch Bridge
     - Firewall は `svc_procs` で iptables 設定をする `router` として定義します。
-  - `name` : String
+  - `name` : _String_
     - ノード名 = オブジェクト識別子 (unique)
-  - `interfaces` : Array\<Interface\>
+  - `interfaces` : _Array\<Interface\>_
     - インタフェースの配列
-  - `routes`[optional]: Array\<Route\>
+  - `routes`[optional]: _Array\<Route\>_
     - ノードに設定する静的経路
     - type `host`, `router` のときのみ有効
-  - `svc_procs`[optional]: Array\<String\>
+  - `svc_procs`[optional]: _Array\<String\>_
     - ノード作成時に実行するコマンド
     - 常時実行するプロセスはバックグラウンド実行するコマンド文字列で与えること (e.g.`"command &"`)
     - type `host`, `router` のときのみ有効
-  - `stp`[optional]: Boolean
+  - `stp`[optional]: _Boolean_
     - STP (802.1D) の有効化
     - type `switch` のときのみ有効
-  - `stp_priority`[optional]: Integer
+  - `stp_priority`[optional]: _Integer_
     - STP (802.1D) bridge priority (0=primary root, 4096(0×1000)=secondary root, default=32768(0×8000))
     - type `switch` のときのみ有効
-- Interface:
-  - `type` : String in[`l3`, `l2`]
+- _Interface_:
+  - `type` : _String_ in[`l3`, `l2`]
     - インタフェースを持つノードが type `switch` の場合、インタフェースの type は `l2` を指定すること。(`switch` に対して `l3` 指定した場合は未実装)
-  - `name`: String
+  - `name`: _String_
     - インタフェース名 = オブジェクト識別子
     - mininet 的には全てのノードの名前が見えるので、`hostanme-ethX` の形で指定するのを推奨
     - __:warning: veth については使えない文字・最大長(15 文字)制限があります__
-  - `ip_addr`[optional]: String like IPv4/prefix-length (e.g. 192.168.0.1/24)
+  - `mac_addr`[optional]: _String_ MAC address (e.g. `00:00:5e:00:53:00`)
+    - MAC アドレス
+    - インタフェースを持つノードが type `switch` **以外**の場合に有効
+    - インタフェースのタイプは `l2`/`l3` いずれに対しても設定可能。指定されない場合 (default) はランダムに MAC アドレスを設定
+  - `ip_addr`[optional]: _String_ IPv4/prefix-length (e.g. `192.168.0.1/24`)
     - IP アドレス
-    - type `l3` のときは必須
-    - type `l2` のときは無視する
-  - `access_vlan`[optional]: Integer
+    - インタフェースの type が `l3` のときは必須、`l2` のときは無視
+  - `access_vlan`[optional]: _Integer_
     - アクセスポートの VLAN ID
     - インタフェースを持つノードが type `switch` のときのみ有効
-  - `trunk_vlans`[optional]: Array\<Integer\>
+  - `trunk_vlans`[optional]: _Array\<Integer\>_
     - トランクポートの VLAN ID リスト
     - インタフェースを持つノードが type `switch` のときのみ有効
     - `3-5` などの範囲指定は使えません
-  - `sub_interfaces`[optional]: Array\<SubInterface\>
+  - `sub_interfaces`[optional]: _Array\<SubInterface\>_
     - サブインタフェースのリスト : Linux node むけの vlan 設定は親インタフェースに対する子インタフェース(sub interface)指定となるため、入れ子にしてある。
     - インタフェースを持つノードが type `host`, `router` のときのみ有効
   - 補足: vlan 設定はノード種別に応じて使い分ける
     - for `switch` : `access_vlan` or `trunk_vlans`
     - for `host` and `router` : `sub_interfaces`
-- SubInterface:
+- _SubInterface_:
   - ノードが `host` または `router` の場合に使用する。親インタフェースは `l2`/`l3` どちらでもよい。
   - `name`[optional]: String
     - サブインタフェース名。省略時は "親インタフェース名.vlan" 形式になる
-  - `ip_addr` : String like IPv4/prefix-length
+  - `ip_addr` : _String_ IPv4/prefix-length
     - IP アドレス
-  - `vlan`: Integer
+  - `mac_addr`[optional]: _String_ MAC address
+    - MAC アドレス
+  - `vlan`: _Integer_
     - VLAN ID
-- Route:
-  - `dst_net`: String like IPv4/prefix-length or `default`
+- _Route_:
+  - `dst_net`: _String_ IPv4/prefix-length or `default`
     - 対象とする宛先の範囲
-  - `next_hop` : String like IPv4 or `blackhole`
+  - `next_hop` : _String_ IPv4 or `blackhole`
     - 転送先 IP アドレス
-  - `note`[optional]: String
+  - `note`[optional]: _String_
     - コメント (json 使用時のコメント欄)
-- Link:
+- _Link_:
   - __:warning: リンク端点 (tp: termination-point) に sub-interface は指定できない__
-  - `node1` : String
+  - `node1` : _String_
     - リンク端点 1 のノード名
-  - `intf1` : String
+  - `intf1` : _String_
     - リンク端点 1 のインタフェース名
-  - `node2` : String
+  - `node2` : _String_
     - リンク端点 2 のノード名
-  - `intf2` : String
+  - `intf2` : _String_
     - リンク端点 2 のインタフェース名
-  - `down`[optional]: Boolean
+  - `down`[optional]: _Boolean_
     - 初期起動時にリンクを up にするか (省略時は false = up)
 
 ## TODO

@@ -20,7 +20,7 @@ Consolas では黒丸数字が半角幅になってしまうため、読みに�
 
 ![Windows github](./windows-font.png)
 
-(図: チュートリアル 3 を Windows 上で見た場合, 左: Lucida console, 右: Consolas)
+(図: コードブロック中の黒丸数字を Windows 上で見た場合, 左: Lucida console, 右: Consolas)
 
 Github 側で設定されるスタイルは指定できません。利用者側で個別にフォント指定を変更する必要があります。
 
