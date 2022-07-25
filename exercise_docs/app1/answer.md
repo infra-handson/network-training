@@ -60,12 +60,15 @@
 回答
 
 ```sh
-# remove dummy ip
+# re, s1c ダミーIPアドレスを削除する
 re ip addr del 10.0.0.1/24 dev re-eth1.12
 s1c ip addr del 10.0.0.2/24 dev s1c-eth0
-# add correct ip
+
+# re, s1c IPアドレスを設定する。(`nn` はプレフィックスレングス)
 re ip addr add 172.16.0.145/29 dev re-eth1.12
 s1c ip addr add 172.16.0.146/29 dev s1c-eth0
+
+# s1c 経路情報を設定する
 s1c ip route add default via 172.16.0.145
 ```
 
