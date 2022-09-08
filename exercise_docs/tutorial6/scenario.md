@@ -131,7 +131,9 @@ hc ip neigh
 ra ip neigh
 ```
 
-(Shell ターミナル) Switch.1 のポート番号の確認 (OS 上のインタフェース名と、スイッチ内部で扱うポート番号の対応)
+(Shell ターミナル) Switch.1 のポート番号の確認
+* OS 上のインタフェース名 `sw1-ethX` と、スイッチ内部で扱うポート番号 `port N` の対応
+* これは環境起動ごとに変わる可能性があります。各自の環境での対応を確認してください。
 
 ```text
 root@nwtraining01:/# ovs-dpctl show
@@ -159,7 +161,7 @@ root@nwtraining01:/#
 
 ```shell
 # sw1 MACアドレステーブルをクリア
-ovs-appctl fdb/show sw1
+ovs-appctl fdb/flush sw1
 # クリアされたことを確認
 ovs-appctl fdb/show sw1
 ```
