@@ -210,7 +210,7 @@ mininet> sh ovs-appctl fdb/show sw1
 
 どのノードが何を見てどのようにパケットを送信（転送）しているのかをトレースします。シーケンス図と合わせて動作をトレースしてみてください。
 
-* [チュートリアル 2](../tutorial2/scenario.md) (同一 L2 セグメント内の通信) と同じところ・違うところはどこか?
+* :bulb: [チュートリアル 2](../tutorial2/scenario.md) (同一 L2 セグメント内の通信) と同じところ・違うところはどこか?
   * セグメントをまたぐときに Router1 は何をやっているのか?
 
 ![sequence](sequence.drawio.svg)
