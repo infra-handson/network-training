@@ -307,7 +307,7 @@ mininet> ha ip neigh
 192.168.0.2 dev ha-eth0 lladdr 00:00:5e:00:53:0b REACHABLE  ...❹
 ```
 
-これで、ping を送るために必要な情報 = Host.B の "住所氏名" "座席番号" がわかりました。実際に ping パケットを送るのはここからになります。Host.C 宛に ping パケット (ICMP echo request) を送ります。
+これで、ping を送るために必要な情報 = Host.B の "住所氏名" "座席番号" がわかりました。実際に ping パケットを送るのはここからになります。Host.B 宛に ping パケット (ICMP echo request) を送ります。
 
 ### (7) Switch.1
 
