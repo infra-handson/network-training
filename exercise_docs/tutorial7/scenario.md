@@ -309,7 +309,7 @@ num   pkts bytes target     prot opt in     out     source               destina
 Code-server 利用時は、code-server から直接編集できます。
 
 * (コンテナ外, Docker ホスト側) `~/network-training/exercise` ディレクトリにチュートリアル・演習用の素材があります。
-  * Docker ホスト側の `~/network-training/exercise` をコンテナ内 `/nw_env_defs` にマウントしています。コンテナ内から見える `/nw_env_defs` とこのディレクトリは同じディレクトリです。
+  * Docker ホスト側の `~/network-training/exercise` をコンテナ内 `/exercise` にマウントしています。コンテナ内から見える `/exercise` と ホスト側の `~/network-training/exercise` は同じディレクトリです。
   * :warning: ローカルファイルをマウントしているので、変更したファイルは残ります。オリジナルのファイルを直接編集せず、コピーして使ってください。使い終わったものは消してください。
 * :warning: code-server のファイルの自動保存機能は有効にしていないので、 `Ctrl-s` で明示的にファイルを保存してください。
 
