@@ -46,7 +46,7 @@
 
 チュートリアル 7 のネットワークを起動します。
 
-```bash
+```sh
 cd /exercise
 ./nw_training.py tutorial7/scenario.json
 ```
@@ -64,7 +64,9 @@ Firewall.A は L3 ルーティングだけでなく L4 のパケットフィル�
 (Mininet ターミナル)
 
 * パケットフィルタには `iptables` を使用しています
-
+```sh
+fa iptables -nvL
+```
 ```text
 mininet> fa iptables -nvL
 Chain INPUT (policy ACCEPT 0 packets, 0 bytes)
@@ -115,6 +117,9 @@ FORWARD chain のルールについて:
 
 (Mininet ターミナル) ping による通信確認
 
+```sh
+pingall
+```
 ```text
 mininet> pingall
 *** Ping: testing ping reachability
@@ -127,6 +132,9 @@ hb -> fa ha
 すべて問題なく通信できています。
 このとき、再度パケットフィルタのルール一覧を出してみます。
 
+```sh
+fa iptables -nvL
+```
 ```text
 mininet> fa iptables -nvL
 Chain INPUT (policy ACCEPT 4 packets, 336 bytes)
@@ -155,6 +163,9 @@ L3 の通信確認をしたので次は L4 の通信確認をします。ただ�
 
 (Mininet ターミナル) Host.B で動いているプロセス確認
 
+```sh
+hb ps -Ho pid,args
+```
 ```text
 mininet> hb ps -Ho pid,args
     PID COMMAND
@@ -175,6 +186,9 @@ mininet> hb ps -Ho pid,args
 
 `python3 -m http.server` で HTTP サーバが動いてるので、CLI の HTTP クライアントでアクセスしてみます。
 
+```sh
+hb curl localhost:8000
+```
 ```text
 mininet> hb curl localhost:8000
 127.0.0.1 - - [01/Jul/2021 12:21:58] "GET / HTTP/1.1" 200 -
@@ -189,6 +203,9 @@ mininet> hb curl localhost:8000
 
 同様に Host.A からも接続して確認してみます。
 
+```sh
+ha curl 172.16.0.2:8000
+```
 ```text
 mininet> ha curl 172.16.0.2:8000
    __ __         __    ___ 
@@ -200,6 +217,9 @@ mininet> ha curl 172.16.0.2:8000
 
 接続できました。パケットフィルタテーブルを確認してみましょう。
 
+```sh
+fa iptables -nvL
+```
 ```text
 mininet> fa iptables -nvL
 Chain INPUT (policy ACCEPT 4 packets, 336 bytes)
@@ -233,8 +253,8 @@ Chain OUTPUT (policy ACCEPT 4 packets, 336 bytes)
 
 (Mininet ターミナル) パケットフィルタルール設定スクリプトの実行
 
-```text
-mininet> fa sh /exercise/tutorial5/fa_fw.sh
+```sh
+fa sh /exercise/tutorial5/fa_fw.sh
 ```
 
 ### (a) 直接 CLI で変更
@@ -245,6 +265,9 @@ mininet> fa sh /exercise/tutorial5/fa_fw.sh
 
 (Mininet ターミナル) 行番号付きでルールを確認。いま変更したいのは FORWARD chain の 2 行目 (`num` = 2) のルールです。
 
+```sh
+fa iptables -nvL --line-numbers
+```
 ```text
 mininet> fa iptables -nvL --line-numbers
 Chain INPUT (policy ACCEPT 4 packets, 336 bytes)
@@ -262,6 +285,12 @@ num   pkts bytes target     prot opt in     out     source               destina
 
 `iptables -D` で FORWARD chain の 2 行目 (`num` = 2) を削除し、ルールが消えたことを確認します。
 
+```sh
+# 2行目を削除
+fa iptables -D FORWARD 2
+# 確認
+fa iptables -nvL --line-numbers
+```
 ```text
 mininet> fa iptables -D FORWARD 2
 mininet> 
@@ -282,6 +311,12 @@ num   pkts bytes target     prot opt in     out     source               destina
 
 * `-I 対象Chain 挿入する位置(行番号) フィルタルール` です
 
+```sh
+# 2行目に挿入
+fa iptables -I FORWARD 2 -s 192.168.0.0/24 -d 172.16.0.2/32 -p tcp --dport 8000 -j REJECT
+# 確認
+fa iptables -nvL --line-numbers
+```
 ```text
 mininet> fa iptables -I FORWARD 2 -s 192.168.0.0/24 -d 172.16.0.2/32 -p tcp --dport 8000 -j REJECT
 mininet> 
@@ -306,26 +341,35 @@ num   pkts bytes target     prot opt in     out     source               destina
 
 <summary>エディタでパケットフィルタルール設定スクリプトを編集</summary>
 
-Code-server 利用時は、code-server から直接編集できます。
+Docker ホスト側 (演習コンテナ外) の `~/network-training/exercise` ディレクトリに、チュートリアル・演習用の素材があります。
 
-* (コンテナ外, Docker ホスト側) `~/network-training/exercise` ディレクトリにチュートリアル・演習用の素材があります。
-  * Docker ホスト側の `~/network-training/exercise` をコンテナ内 `/exercise` にマウントしています。コンテナ内から見える `/exercise` と ホスト側の `~/network-training/exercise` は同じディレクトリです。
-  * :warning: ローカルファイルをマウントしているので、変更したファイルは残ります。オリジナルのファイルを直接編集せず、コピーして使ってください。使い終わったものは消してください。
+* :customs: Docker ホスト側の `~/network-training/exercise` をコンテナ内 `/exercise` にマウントしています。コンテナ内から見える `/exercise` と ホスト側の `~/network-training/exercise` は同じディレクトリです。
+* :warning: ローカルファイルをマウントしているので、変更したファイルは残ります。オリジナルのファイルを直接編集せず、いったん作業用にファイルをコピーしてください。(元のファイルを取っておいて初期状態に戻せるようする。)
+
+(Shell ターミナル) 作業用ファイルのコピー
+
+```sh
+cd /exercise/tutorial7/
+cp fa_fw.sh fa_fw_mod.sh
+```
+
+Code-server 利用時は、code-server から直接編集できます。
 * :warning: code-server のファイルの自動保存機能は有効にしていないので、 `Ctrl-s` で明示的にファイルを保存してください。
 
 ![Edit script with code-server](csvr_edit.png)
 
-CLI からファイル編集したい場合、演習コンテナには `vi` エディタあります。`vi` が使える方はそちらでもスクリプトを編集できます。
+CLI からファイル編集したい場合、演習コンテナには `vi` エディタがあります。`vi` が使える方はそちらでもスクリプトを編集できます。
 
-* :warning: いったん作業用にファイルをコピーしてください。(元のファイルを取っておいて初期状態に戻せるようする。)
 * スクリプト中では最初に `-F` ですべてリセットしているので、パケットカウンタ等はクリアされます。
 
 (Shell ターミナル) スクリプトの編集
 
+```sh
+cd /exercise/tutorial7/
+vi fa_fw_mod.sh
+```
 ```text
-root@nwtraining01:~# cd /exercise/tutorial5/
-root@nwtraining01:/exercise/tutorial5# cp fa_fw.sh fa_fw_mod.sh
-root@nwtraining01:/exercise/tutorial5# cat -n fa_fw_mod.sh
+root@nwtraining01:/exercise/tutorial7# cat -n fa_fw_mod.sh
      1  #!/bin/bash
      2
      3  # clear all
@@ -344,8 +388,16 @@ root@nwtraining01:/exercise/tutorial5# vi fa_fw_mod.sh
 # 13行目の `-j ACCEPT` を `-j REJECT` に変更して保存
 ```
 
+Code-server または vi で編集・ファイル保存したらスクリプトを実行します。
+
 (Mininet ターミナル) スクリプトの実行
 
+```sh
+# FWルール設定変更スクリプトの実行
+fa sh /exercise/tutorial5/fa_fw_mod.sh
+# 確認
+fa iptables -nvL --line-numbers
+```
 ```text
 mininet> fa sh /exercise/tutorial5/fa_fw_mod.sh
 mininet> fa iptables -nvL --line-numbers
@@ -379,6 +431,10 @@ num   pkts bytes target     prot opt in     out     source               destina
 
 (Mininet ターミナル) Host.A → Host.B HTTP 接続実行
 
+```sh
+ha curl 172.16.0.2:8000
+fa iptables -nvL --line-numbers
+```
 ```text
 mininet> ha curl 172.16.0.2:8000
 curl: (7) Failed to connect to 172.16.0.2 port 8000: ❶Connection refused

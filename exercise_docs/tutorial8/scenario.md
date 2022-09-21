@@ -36,7 +36,7 @@ Previous << [Index](../index.md) >> [Next](../l2nw3/question.md)
 
 チュートリアル 8 のネットワーク (8a) を起動します。(このチュートリアルは [チュートリアル3](../tutorial3/scenario.md) がベースになっています。チュートリアル 8a ネットワークは、チュートリアル 3 ネットワークと同じものです。)
 
-```bash
+```sh
 cd /exercise
 ./nw_training.py tutorial8/scenario_a.json
 ```
@@ -53,6 +53,12 @@ cd /exercise
 * ❶❷ の `state UP`、❷❹ の `state DOWN` に着目してください。
 * sw1-eth11 <-> sw2-eth1 リンクの両端を down にしてあります。
 
+```sh
+# Switch.1
+sw1 ip link | egrep "sw1-eth1[01]@"
+# Switch.2
+sw2 ip link | egrep "sw2-eth[01]@"
+```
 ```text
 mininet> sw1 ip link | egrep "sw1-eth1[01]@"
 12: sw1-eth10@sw2-eth0: <BROADCAST,MULTICAST,❶UP,LOWER_UP> mtu 1500 qdisc noqueue master ovs-system ❷state UP mode DEFAULT group default qlen 1000
@@ -67,7 +73,9 @@ mininet> sw2 ip link | egrep "sw2-eth[01]@"
 
 (Shell ターミナル) 観測用に Host.A でパケットキャプチャを取っておきます (任意のノードで構いません)
 
-```text
+```sh
+ip netns exec ha tcpdump -l
+``````text
 root@nwtraining01:/# ip netns exec ha tcpdump -l
 ...
 ```
@@ -81,15 +89,15 @@ root@nwtraining01:/# ip netns exec ha tcpdump -l
 
 * __:warning: この操作はネットワーク障害を発生させるものです。実施すると CPU 使用率が上昇するため、操作に対して応答が遅くなるおそれがあります。__
 
-```text
-mininet> sw2 ip link set sw2-eth1 up
-mininet> sw1 ip link set sw1-eth11 up
+```sh
+sw2 ip link set sw2-eth1 up
+sw1 ip link set sw1-eth11 up
 ```
 
 2 つ目のインタフェースを up にした段階で大量のパケットが流れていることを確認してください。確認できたらインタフェースを down させて事象を止めます。特に何も流れない場合、適当に ping コマンドを(複数の宛先に対して)実行してみてください。
 
-```text
-mininet> sw1 ip link set sw1-eth11 down
+```sh
+sw1 ip link set sw1-eth11 down
 ```
 
 これは**ブロードキャストストーム**と呼ばれています。スイッチは全員あて(ブロードキャスト)のパケットを受け取ると、そのパケットが入ってきたポート以外の、同じ L2 セグメントに属している全ポートにコピーして送付します(**フラッディング**)。L2 セグメントをブロードキャストドメインとも呼んでいますが、その名の通りブロードキャストがフラッディングされる範囲、"ひとつなぎのメディア" でつながっている領域を意味しています。
@@ -111,6 +119,9 @@ Switch.1-2 間のように、1 つのブロードキャストドメインの中�
 ### チュートリアル8aのSTP設定確認
 この後、STP の動作について見ていきますが、その前に、ここまで使用していたチュートリアル 8a ネットワークで STP が使用されていないことを確認しておきます。
 
+```sh
+ovs-vsctl --columns name,stp_enable list Bridge
+```
 ```text
 root@nwtraining01:/# ovs-vsctl --columns name,stp_enable list Bridge
 name                : sw1
@@ -134,7 +145,7 @@ mininet> exit
 
 チュートリアル 8b のネットワークを起動します。
 
-```bash
+```sh
 cd /exercise
 ./nw_training.py tutorial7/scenario_b.json
 ```
@@ -145,6 +156,12 @@ scenario_b は、トポロジとしては最初に使用した scenario_a と全
 
 (Mininet ターミナル) Switch.1-Switch.2 間リンクの状態確認
 
+```sh
+# Switch.1
+sw1 ip link | egrep "sw1-eth1[01]@"
+# Switch.2
+sw2 ip link | egrep "sw2-eth[01]@"
+```
 ```text
 mininet> sw1 ip link | egrep "sw1-eth1[01]@"
 77: sw1-eth10@sw2-eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master ovs-system state UP mode DEFAULT group default qlen 1000
@@ -162,6 +179,9 @@ STP を使うとスイッチ間で情報交換をして L2 ループを検出し
 
 (Shell ターミナル) Switch.1/2 で STP が有効化されていることを確認する
 
+```sh
+ovs-vsctl --columns name,stp_enable list Bridge
+```
 ```text
 root@nwtraining01:/# ovs-vsctl --columns name,stp_enable list Bridge
 name                : sw1
@@ -175,6 +195,10 @@ STP により通信を止められているポートを **ブロッキングポ�
 
 (Mininet ターミナル) ブロッキングポートの検索
 
+```sh
+sh ovs-vsctl --columns name,status list Port | grep -i blocking -B1
+sw1 ip link show dev sw1-eth11
+```
 ```text
 mininet> sh ovs-vsctl --columns name,status list Port | grep -i blocking -B1
 name                : sw2-eth1

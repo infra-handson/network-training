@@ -31,7 +31,7 @@
 
 回答 1: 最小かつ必須
 
-```bash
+```sh
 # default to Router.B (via.q)
 ha ip route add default via 192.168.0.33
 # NW.A to Router.A (via.p)
@@ -54,7 +54,7 @@ default via 192.168.0.33 dev ha-eth0
 
 回答 2: やや冗長だけど問題なし
 
-```bash
+```sh
 # default to Router.B (via.q)
 ha ip route add default via 192.168.0.33
 # NW.A to Router.A (via.p)
@@ -82,7 +82,7 @@ ha ip route add 192.168.0.20/30 via 192.168.0.37 # or 192.168.0.33
 * Server.A-E で経路設定が不足しているのは Server.A だけです。
 * Server.A 以下の設定を追加する必要があります。
 
-```bash
+```sh
 # default to Router.A
 sa ip route add default via 172.16.0.129
 # OR: NW.p to Router.A

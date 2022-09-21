@@ -102,7 +102,7 @@ Mininet ホストでサーバアプリケーションをバックグラウンド
 - :white_check_mark: この環境内では Python の http モジュールを使用して Web サーバとしています。(コマンド末尾の `&` がバックグラウンド実行を指定しています。)
 - :bulb: 実行オプションについては [http.server --- HTTP サーバ — Python 3.9.4 ドキュメント](https://docs.python.org/ja/3/library/http.server.html) 参照
 
-```bash
+```sh
 # Mininet ターミナル
 sa1 python3 -m http.server &
 ```
@@ -116,7 +116,7 @@ sa1 python3 -m http.server &
 バックグラウンド実行されているプロセスはそのまま (フォアグラウンドから) では操作できません。
 Mininet ホストで動作しているプロセス ID を確認し、`kill`コマンドでプロセス ID を指定してプロセスを停止してください。
 
-```bash
+```sh
 # プロセス・プロセスIDの確認
 ps -Ho pid,args
 # プロセス停止 (プロセスID 12345 のプロセスの停止)
@@ -131,7 +131,7 @@ kill 12345
 
 表 1 のすべてが成功するかチェックするスクリプトがあります。(テストスクリプトの詳細については [L3NW-2 問題1](../l3nw2/question.md) にある解説を参照してください)
 
-```bash
+```sh
 cd /exercise
 ./nw_test.sh l4nw1
 ```

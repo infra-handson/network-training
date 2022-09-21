@@ -94,7 +94,7 @@ Previous << [Index](../index.md) >> [Next](../tutorial1/scenario.md)
 * チュートリアル・演習用の環境はコンテナとして提供されます。
 * :warning: コンテナ操作 (`docker-compose` コマンド) をするには、設定ファイル ([docker-compose.yml](/docker-compose.yml)) がある `~/network-training` ディレクトリにいる必要があります。
 
-```shell
+```sh
 cd ~/network-training
 ```
 
@@ -102,6 +102,9 @@ cd ~/network-training
 
 演習コンテナ `network-training_lab_1`  が `Up` になっていることを確認してください。(コンテナは常時起動するように設定していますが念のため。)
 
+```sh
+docker-compose --compatibility ps
+```
 ```text
 [root@ip-10-0-190-203 ~/network-training]$ docker-compose --compatibility ps
          Name                       Command               State   Ports
@@ -122,6 +125,9 @@ docker-compose --compatibility up -d
 
 コンテナ内に入ると、下記のように `root@nwtraining01` プロンプトに変化します。
 
+```sh
+docker-compose exec lab bash
+```
 ```text
 [root@ip-10-0-190-203 ~/network-training]$ docker-compose exec lab bash
 # --compatibility オプションがない場合 WARNING が出るかもしれませんが無視してください
@@ -144,7 +150,7 @@ root@nwtraining01:/#
 
 チュートリアル 1 用のネットワークを起動してみましょう。
 
-```bash
+```sh
 cd /exercise
 ./nw_training.py tutorial1/scenario.json
 ```
@@ -185,6 +191,10 @@ root@nwtraining01:/exercise#
 
 起動がうまくいかない場合は、停止した際に何かしらのゴミが残っていることが想定されます。その場合、Mininet のクリーニングコマンド (`mn -c`) および `rm -rf /var/run/netns/*` を実行してください。
 
+```sh
+mn -c
+rm -rf /var/run/netns/*
+```
 ```text
 root@nwtraining01:/exercise# mn -c
 *** Removing excess controllers/ofprotocols/ofdatapaths/pings/noxes

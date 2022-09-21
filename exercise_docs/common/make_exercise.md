@@ -59,7 +59,7 @@
   - __:warning: yaml 編集後、json に変換して exercise 下に置くのを忘れずに。__
 - "ModuleNotFoundError: No module named 'declared_topology'" となる場合は `PYTHONPATH` を設定してください。
 
-```shell
+```sh
 export PYTHONPATH="$PYTHONPATH:$(pwd)/exercise/mn_builder"
 ./topology_checker.py 整合性テストをする演習ネットワーク定義ファイル(yaml/json)
 ```

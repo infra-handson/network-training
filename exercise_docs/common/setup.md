@@ -189,7 +189,7 @@ cert: false
 
 設定変更したら再起動
 
-```shell
+```sh
 systemctl restart code-server@$USER
 ```
 

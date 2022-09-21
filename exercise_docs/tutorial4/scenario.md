@@ -53,7 +53,7 @@ VLAN は 1 つの物理リソースを複数個の論理リソースに見せる
 
 チュートリアル 4 のネットワーク (4a) を起動します。
 
-```bash
+```sh
 cd /exercise
 ./nw_training.py tutorial4/scenario_a.json
 ```
@@ -74,10 +74,19 @@ cd /exercise
 各ノードの IP アドレス・MAC アドレスが[チュートリアル 3](../tutorial3/scenario.md) と同じになっていることを確認してください。
 * :customs: チュートリアル 3 の演習ネットワークでは表のように MAC アドレスを設定して固定しています。
 
-```shell
+```sh
 # Host.A
 ha ip -4 addr show dev ha-eth0  # L3アドレス: IP アドレスの確認
 ha ip link show dev ha-eth0     # L2アドレス: MAC アドレスの確認
+# Host.B
+hb ip -4 addr show dev hb-eth0
+hb ip link show dev hb-eth0
+# Host.C
+hc ip -4 addr show dev hc-eth0
+hc ip link show dev hc-eth0
+# Host.D
+hd ip -4 addr show dev hd-eth0
+hd ip link show dev hd-eth0
 ```
 
 | Node   |Interface| IP address  | MAC address       |
@@ -91,6 +100,9 @@ ha ip link show dev ha-eth0     # L2アドレス: MAC アドレスの確認
 
 (Shell ターミナル) Switch.1 の設定情報を確認します
 
+```sh
+ovs-vsctl show
+```
 ```text
 root@nwtraining01:/# ovs-vsctl show
 83c670f3-306d-4f3f-be2f-a8f5d0c461ed
@@ -126,12 +138,19 @@ IP アドレスが重複している Host.C/D の前に、まず Host.A から H
 (Shell ターミナル) パケットキャプチャ@Host.A
 
 ```text
+ip netns exec ha tcpdump -l
+```
+```text
 root@nwtraining01:/# ip netns exec ha tcpdump -l
 ...
 ```
 
 (Mininet ターミナル) Host.A → Host.B 通信確認
 
+```sh
+ha ping -c3 192.168.0.2
+ha ip neigh
+```
 ```text
 mininet> ha ping -c3 192.168.0.2
 PING 192.168.0.2 (192.168.0.2) 56(84) bytes of data.
@@ -163,19 +182,10 @@ VLAN によって L2 セグメント = ブロードキャストドメインが�
 
 (Mininet ターミナル) Host.A → 192.168.0.3 (Host.C or D)
 
-```text
+```sh
 # ARP テーブルに 192.168.0.3 のエントリがあったら消しておく
-mininet> ha ip neigh flush to 192.168.0.3
-
-mininet> ha ping -c3 192.168.0.3
-PING 192.168.0.3 (192.168.0.3) 56(84) bytes of data.
-64 bytes from 192.168.0.3: icmp_seq=1 ttl=64 time=0.216 ms
-64 bytes from 192.168.0.3: icmp_seq=2 ttl=64 time=0.421 ms
-64 bytes from 192.168.0.3: icmp_seq=3 ttl=64 time=0.065 ms
-
---- 192.168.0.3 ping statistics ---
-3 packets transmitted, 3 received, 0% packet loss, time 2027ms
-rtt min/avg/max/mdev = 0.065/0.234/0.421/0.145 ms
+ha ip neigh flush to 192.168.0.3
+ha ping -c3 192.168.0.3
 ```
 
 このときのパケットキャプチャの様子 @Host.A
@@ -198,6 +208,9 @@ rtt min/avg/max/mdev = 0.065/0.234/0.421/0.145 ms
 
 IP アドレスが重複しているもう片方のノード (Host.D) → Host.A への通信を試してみましょう。チュートリアル 3 ではこれによって Host.A 側の ARP table で 192.168.0.3 に対応する MAC アドレスが書き換わっていました。
 
+```sh
+hd ping -c3 ha
+```
 ```text
 mininet> hd ping -c3 ha
 PING 192.168.0.1 (192.168.0.1) 56(84) bytes of data.
@@ -230,8 +243,13 @@ Host.D から Host.A への通信はできませんでした。そもそも ARP 
 VLAN によるブロードキャストドメインの分割はスイッチ (Switch.1) で実現されています。
 Switch.1 の MAC アドレステーブルを確認してみましょう。
 
-```text
+```sh
 # OVS ポート番号/インタフェース名の対応確認
+sh ovs-dpctl show
+# MAC アドレステーブルの表示
+sh ovs-appctl fdb/show sw1
+```
+```text
 mininet> sh ovs-dpctl show
 system@ovs-system:
   lookups: hit:25 missed:35 lost:0
@@ -244,8 +262,6 @@ system@ovs-system:
   port 4: sw1-eth2
   port 5: sw1 (internal)
 mininet> 
-
-# MAC アドレステーブルの表示
 mininet> sh ovs-appctl fdb/show sw1
  port  VLAN  MAC                Age
     2    20  00:00:5e:00:53:0b  105
@@ -277,7 +293,7 @@ mininet> exit
 
 チュートリアル 4b のネットワークを起動します。
 
-```bash
+```sh
 cd /exercise
 ./nw_training.py tutorial4/scenario_b.json
 ```
@@ -296,6 +312,9 @@ Switch.2、Host.B/C の接続はこれまで見てきた VLAN 接続と同様に
 
 (Shell ターミナル) スイッチ設定情報確認
 
+```sh
+ovs-vsctl show
+```
 ```text
 root@nwtraining01:/# ovs-vsctl show
 83c670f3-306d-4f3f-be2f-a8f5d0c461ed
@@ -337,8 +356,19 @@ Host.A-Switch.1 間, Switch.1-2 間のポートについて、❶`trunks: [10, 2
 
 Switch.1-2 間では、1 つのリンクに VLAN 10/20 のパケットが流れています。では Switch.1-Host.A 間ではどうでしょうか? Switch.1 の Host.A 接続ポートは Switch.1-2 間と同じ trunk port 設定です。
 
-(Mininet ターミナル) Host.A ポート設定確認
+(Mininet ターミナル) Host.A-C ポート設定確認
 
+```sh
+# Host.A ... すべてのインタフェース情報を確認する
+ha ip link show
+ha ip -4 addr show
+# Host.B
+hb ip -4 addr show dev hb-eth0
+hb ip link show dev hb-eth0
+# Host.C
+hc ip -4 addr show dev hc-eth0
+hc ip link show dev hc-eth0
+```
 ```text
 mininet> ha ip link show
 1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
@@ -361,8 +391,6 @@ mininet> ha ip -4 addr show
     inet 172.16.0.1/24 scope global ha-eth0.20
        valid_lft forever preferred_lft forever
 ```
-
-Host.B/C はこれまでと同様です。
 
 | Node   | Interface    | IP address | MAC address       |
 |--------|--------------|------------|-------------------|
@@ -431,6 +459,9 @@ ha-eth0.20     | 20  | ha-eth0
 
 `/proc/net/vlan/インタフェース名` を参照すると VLAN に関する詳細情報が確認できます。❺ VLAN ID だけでなく、サブインタフェースに対する ❶ 親インタフェースの情報も含まれます。
 
+```sh
+ha cat /proc/net/vlan/ha-eth0.10
+```
 ```text
 mininet> ha cat /proc/net/vlan/ha-eth0.10
 ha-eth0.10  ❺VID: 10    REORDER_HDR: 1  dev->priv_flags: 1021
@@ -482,22 +513,16 @@ Host.A → Host.B/C に対して通信できるかどうかを見てみます。
 
 (Mininet ターミナル) Host.A → Host.B/C
 
-```text
-mininet> ha ping -c3 hb
-...
---- 192.168.0.2 ping statistics ---
-3 packets transmitted, 3 received, 0% packet loss, time 2040ms
-rtt min/avg/max/mdev = 0.034/0.142/0.287/0.106 ms
-mininet> 
-mininet> ha ping -c3 hc
-...
---- 172.16.0.2 ping statistics ---
-3 packets transmitted, 3 received, 0% packet loss, time 2062ms
-rtt min/avg/max/mdev = 0.037/0.117/0.208/0.070 ms
+```sh
+ha ping -c3 hb
+ha ping -c3 hc
 ```
 
 どちらも成功します。Host.A の ARP テーブルで、Host.B/C の送信先が対応するサブインタフェースになっていることを確認してください。
 
+```sh
+ha ip neigh
+```
 ```text
 mininet> ha ip neigh
 172.16.0.2 dev ha-eth0.20 lladdr 00:00:5e:00:53:0c REACHABLE
@@ -506,6 +531,10 @@ mininet> ha ip neigh
 
 逆方向 (Host.B/C → Host.A) も見てみます。
 
+```sh
+hb ping -c1 ha
+hc ping -c1 ha
+```
 ```text
 mininet> hb ping -c1 ha
 ping: ha: Temporary failure in name resolution
@@ -522,6 +551,10 @@ ping: ha: Temporary failure in name resolution
 
 Host.A は複数サブインタフェースを持っているので、それぞれ通信確認したい IP アドレスでを明示的に指定します。
 
+```sh
+hb ping -c1 192.168.0.1
+hc ping -c1 172.16.0.1
+```
 ```text
 mininet> hb ping -c1 192.168.0.1
 PING 192.168.0.1 (192.168.0.1) 56(84) bytes of data.
@@ -542,6 +575,9 @@ rtt min/avg/max/mdev = 0.439/0.439/0.439/0.000 ms
 
 Host.A の ARP テーブルでは Host.B/C それぞれの IP/MAC アドレスの対応関係が取得できています。
 
+```sh
+ha ip neigh
+```
 ```text
 mininet> ha ip neigh
 172.16.0.2 dev ha-eth0.20 lladdr 00:00:5e:00:53:0c STALE
@@ -550,6 +586,10 @@ mininet> ha ip neigh
 
 Host.B の ARP テーブルを見てみましょう。IP アドレス (192.168.0.1) に対して、この IP アドレスを持つ Host.A のサブインタフェースの MAC アドレス❶が登録されていることがわかります。(Host.C/❷ についても同様)
 
+```sh
+hb ip neigh
+hc ip neigh
+```
 ```text
 mininet> hb ip neigh
 192.168.0.1 dev hb-eth0 lladdr 00:00:5e:00:53:a1 REACHABLE  ...❶
@@ -560,8 +600,15 @@ mininet>
 
 Switch.1 の MAC アドレステーブルでは、以下のようになります。Host.A と接続されているポート (port 1) についてサブインタフェースの MAC アドレス❶❷がそれぞれ登録されていることがわかります。サブインタフェース (論理的なインタフェース) の情報がどのように "1 つの(物理)実体" とマッピングされているかを確認してください。
 
-```text
+(Shell ターミナル) スイッチ状態確認
+
+```sh
 # ポート名とポート番号の対応
+ovs-dpctl show
+# MAC アドレステーブル
+ovs-appctl fdb/show sw1
+```
+```text
 root@nwtraining01:/# ovs-dpctl show
 system@ovs-system:
   lookups: hit:69 missed:115 lost:0
@@ -575,8 +622,7 @@ system@ovs-system:
   port 5: sw2-eth2
   port 6: sw2-eth1
   port 7: sw2 (internal)
-
-# MAC アドレステーブル
+root@nwtraining01:/# 
 root@nwtraining01:/# ovs-appctl fdb/show sw1
  port  VLAN  MAC                Age
     1    10  00:00:5e:00:53:a1  108    ... ❶ ha-eth0.10

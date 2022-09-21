@@ -98,7 +98,7 @@ Host.A で :
 
 Router.A に以下の設定を追加してください。
 
-```bash
+```sh
 ra ip route add 192.168.1.50/32 via 192.168.0.37
 ```
 
