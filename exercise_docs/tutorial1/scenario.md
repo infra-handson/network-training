@@ -39,7 +39,7 @@
 
 Mininet ターミナル (Mininet ターミナルとして使う側の shell) でチュートリアル 1 用のネットワークを起動します。
 
-```bash
+```sh
 cd /exercise
 ./nw_training.py tutorial1/scenario.json
 ```
@@ -53,7 +53,9 @@ Mininet CLI で、実際に作られているものを確認してみましょ�
 `nodes` コマンド
 
 - ha, hb の 2 つのノードがいます
-
+```text
+nodes
+```
 ```text
 mininet> nodes
 available nodes are: 
@@ -64,6 +66,9 @@ ha hb
 
 - ha-eth0 インタフェースと hb-eth0 インタフェースが 1 つのリンクでつながっています。
 
+```sh
+links
+```
 ```text
 mininet> links
 ha-eth0<->hb-eth0 (OK OK)
@@ -79,6 +84,9 @@ ha-eth0<->hb-eth0 (OK OK)
 - ノード ha の ha-eth0 インタフェースは hb-eth0 とつながっています。
 - ノード hb の hb-eth0 インタフェースは ha-eth0 インタフェースとつながっています。
 
+```sh
+net
+```
 ```text
 mininet> net
 ha ha-eth0:hb-eth0
@@ -95,6 +103,9 @@ Mininet CLI では、`ノード名 コマンド` の形式で、「ノードの�
   - ノード ha には lo と ha-eth0 の 2 つのインタフェースがある
   - ha-eth0 は 192.168.0.1/24 という IP アドレスを持つ
 
+```sh
+ha ip addr show
+```
 ```text
 mininet> ha ip addr show
 1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
@@ -115,6 +126,9 @@ mininet> ha ip addr show
   - ノード hb には lo と hb-eth0 の 2 つのインタフェースがある
   - hb-eth0 は 192.168.0.2/24 という IP アドレスを持つ
 
+```sh
+hb ip addr show
+```
 ```text
 mininet> hb ip addr show
 1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
@@ -138,6 +152,9 @@ ha から hb に対して ping を実行して通信可能であることを確�
 - `ha ping 宛先` として、ha の中で実行する必要があります
 - ping の `-c` オプションは ping を送付する回数の指定です
 
+```sh
+ha ping -c3 192.168.0.2
+```
 ```text
 mininet> ha ping -c3 192.168.0.2
 PING 192.168.0.2 (192.168.0.2) 56(84) bytes of data.
@@ -154,6 +171,10 @@ rtt min/avg/max/mdev = 0.043/0.063/0.076/0.014 ms
 
 演習ネットワークを起動している (Mininet CLI を実行している) とき、Shell ターミナルからも演習ネットワーク内のノードを操作できます。Shell ターミナルで以下の操作をしてください。
 
+```sh
+ip netns list
+ip netns exec ha ping -c3 192.168.0.2
+```
 ```text
 root@nwtraining01:/# ip netns list
 hb

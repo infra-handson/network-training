@@ -37,7 +37,7 @@
 
 チュートリアル 5 のネットワークを起動します。
 
-```bash
+```sh
 cd /exercise
 ./nw_training.py tutorial5/scenario.json
 ```
@@ -66,17 +66,18 @@ cd /exercise
 |Router.A|192.168.0.1 | ha-eth0 | ? |
 |Router.A|172.16.0.2  | hb-eth0 | ? |
 
-```text
-mininet> ha ping -c3 192.168.0.254
-mininet> ha ping -c3 172.16.0.254
-mininet> ha ping -c3 172.16.0.2
-mininet>
-mininet> hb ping -c3 172.16.0.254
-mininet> hb ping -c3 192.168.0.254
-mininet> hb ping -c3 192.168.0.1
-mininet>
-mininet> ra ping -c3 192.168.0.1
-mininet> ra ping -c3 172.16.0.2
+```sh
+# Host.A
+ha ping -c3 192.168.0.254
+ha ping -c3 172.16.0.254
+ha ping -c3 172.16.0.2
+# Host.B
+hb ping -c3 172.16.0.254
+hb ping -c3 192.168.0.254
+hb ping -c3 192.168.0.1
+# Router.A
+ra ping -c3 192.168.0.1
+ra ping -c3 172.16.0.2
 ```
 
 以下のようになるはずです :
@@ -88,6 +89,14 @@ mininet> ra ping -c3 172.16.0.2
 
 (Mininet ターミナル) Host.A/B, Router.A のルーティングテーブル (宛先ごとの "郵便局役" の設定)を確認してみます。
 
+```sh
+# Host.A
+ha ip route
+# Host.B
+hb ip route
+# Router.A
+ra ip route
+```
 ```text
 mininet> ha ip route
 192.168.0.0/24 dev ha-eth0 proto kernel scope link src 192.168.0.1 
@@ -106,8 +115,13 @@ mininet> ra ip route
 
 (Mininet ターミナル) Host.A の経路情報設定
 
-```text
+```sh
 # Host.B サブネット(172.16.0.0/24)宛パケットを Router.A (192.168.0.254) に中継してもらう
+ha ip route add 172.16.0.0/24 via 192.168.0.254
+# 確認
+ha ip route
+```
+```text
 mininet> ha ip route add 172.16.0.0/24 via 192.168.0.254
 mininet> ha ip route
 172.16.0.0/24 via 192.168.0.254 dev ha-eth0 
@@ -117,9 +131,9 @@ mininet> ha ip route
 (Mininet ターミナル) 再度、通信確認してみます。
 
 ```text
-mininet> ha ping -c3 192.168.0.254
-mininet> ha ping -c3 172.16.0.254
-mininet> ha ping -c3 172.16.0.2
+ha ping -c3 192.168.0.254
+ha ping -c3 172.16.0.254
+ha ping -c3 172.16.0.2
 ```
 
 Router.A の反対側 (ra-eth1) までは応答がありますが、Host.B については応答がありません。今回は "Network is unreachable" (そもそもパケットを送付できていない) ではなく、ping パケットを送付しているものの応答がない状態です。
@@ -128,6 +142,9 @@ Host.B のパケットキャプチャを見ながら、再度 Host.A → Host.B 
 
 (Shell ターミナル) Host.B パケットキャプチャ開始
 
+```sh
+ip netns exec hb tcpdump -l
+```
 ```text
 root@nwtraining01:/# ip netns exec hb tcpdump -l
 ...
@@ -135,8 +152,12 @@ root@nwtraining01:/# ip netns exec hb tcpdump -l
 
 (Mininet ターミナル) Host.A → Host.B 通信確認
 
+```sh
+ha ping -c3 172.16.0.2
+```
 ```text
 mininet> ha ping -c3 172.16.0.2
+...
 PING 172.16.0.2 (172.16.0.2) 56(84) bytes of data.
 
 --- 172.16.0.2 ping statistics ---
@@ -173,6 +194,10 @@ Host.B にも経路情報を設定しないと Host.A-B 間の通信は成立し
 
 * :warning: `default` キーワードは宛先 0.0.0.0/0 と同等です
 
+```sh
+hb ip route add default via 172.16.0.254
+hb ip route
+```
 ```text
 mininet> hb ip route add default via 172.16.0.254
 mininet> hb ip route
@@ -182,6 +207,10 @@ default via 172.16.0.254 dev hb-eth0
 
 (Mininet ターミナル) Host.A → Host.B 通信確認
 
+```sh
+ha ping -c3 172.16.0.2
+pingall
+```
 ```text
 mininet> ha ping -c3 172.16.0.2
 PING 172.16.0.2 (172.16.0.2) 56(84) bytes of data.

@@ -110,7 +110,7 @@ Chain OUTPUT (policy ACCEPT 0 packets, 0 bytes)
 
 Router.B 初期状態のルール ❷ を以下ルールに変更した際、Host.B から Server.A1/2 がもつ IP アドレスへの HTTP 通信が成功するかどうかを確認してください。
 
-```shell
+```sh
 iptables -A FORWARD -s 192.168.0.16/30 -d 192.168.0.0/30 -p tcp --dport 8080 -j ACCEPT
 #                                                    ^^^^
 ```
@@ -145,7 +145,7 @@ Chain OUTPUT (policy ACCEPT 0 packets, 0 bytes)
 
 問題 1A で追加したルールを削除し、以下のルールに置き換えます。同様に各 IP アドレスに対して HTTP 通信が成功するかどうかを確認してください。
 
-```shell
+```sh
 iptables -A FORWARD -s 192.168.0.16/30 -d 192.168.0.0/29 -p tcp --dport 8080 -j ACCEPT
 #                                                    ^^^^
 ```

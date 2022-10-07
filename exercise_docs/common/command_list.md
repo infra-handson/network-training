@@ -106,7 +106,7 @@ cd /exercise
 
 演習ネットワークの強制リセット操作
 
-```shell
+```sh
 mn -c
 rm -rf /var/run/netns
 ```

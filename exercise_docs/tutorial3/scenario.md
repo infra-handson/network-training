@@ -39,7 +39,7 @@
 
 チュートリアル 3 のネットワークを起動します。
 
-```bash
+```sh
 cd /exercise
 ./nw_training.py tutorial3/scenario.json
 ```
@@ -59,6 +59,9 @@ cd /exercise
 この後、スイッチの設定を変更してどのように動作をコントロールできるのかを見ていくので、スイッチの設定情報を確認してみましょう。
 スイッチは Open vSwitch というソフトウェアで構成されています。`ovs-vsctl show` (Shell ターミナル) で設定情報を確認できます。
 
+```sh
+ovs-vsctl show
+```
 ```text
 root@nwtraining01:/# ovs-vsctl show
 83c670f3-306d-4f3f-be2f-a8f5d0c461ed
@@ -118,10 +121,19 @@ root@nwtraining01:/# ovs-vsctl show
 
 IP アドレス・MAC アドレスの確認方法は[チュートリアル 2](../tutorial2/scenario.md)と同様です。
 
-```shell
+```sh
 # Host.A
-ha ip -4 addr show dev ha-eth0  # L3アドレス: IP アドレスの確認
-ha ip link show dev ha-eth0     # L2アドレス: MAC アドレスの確認
+ha ip -4 addr show dev ha-eth0  # L3: IP アドレスの確認
+ha ip link show dev ha-eth0     # L2: MAC アドレスの確認
+# Host.B
+hb ip -4 addr show dev hb-eth0
+hb ip link show dev hb-eth0
+# Host.C
+hc ip -4 addr show dev hc-eth0
+hc ip link show dev hc-eth0
+# Host.D
+hd ip -4 addr show dev hd-eth0
+hd ip link show dev hd-eth0
 ```
 
 | Node   |Interface| IP address  | MAC address       |
@@ -135,7 +147,7 @@ ha ip link show dev ha-eth0     # L2アドレス: MAC アドレスの確認
 
 (Mininet ターミナル) 各ノードの ARP テーブルをクリア
 
-```shell
+```sh
 # クリア
 ha ip neigh flush dev ha-eth0
 hb ip neigh flush dev hb-eth0
@@ -150,7 +162,7 @@ hd ip neigh
 
 (Shell ターミナル) Switch.1 の MAC アドレステーブルをクリア
 
-```shell
+```sh
 # クリア
 ovs-appctl fdb/flush sw1
 # 確認
@@ -164,6 +176,9 @@ ovs-appctl fdb/show sw1
 (Shell ターミナル) パケットキャプチャ@Host.A
 * :bulb: tcpdump コマンドの `-n` はアドレスをそのまま表示する、`-e` は L2 の情報を表示するオプションです。
 
+```sh
+ip netns exec ha tcpdump -nle
+```
 ```text
 root@nwtraining01:/# ip netns exec ha tcpdump -nle
 ...
@@ -171,6 +186,10 @@ root@nwtraining01:/# ip netns exec ha tcpdump -nle
 
 (Mininet ターミナル) ping Host.A → 192.168.0.2 (Host.B)
 
+```sh
+ha ping -c3 192.168.0.2
+ha ip neigh
+```
 ```text
 mininet> ha ping -c3 192.168.0.2
 PING 192.168.0.2 (192.168.0.2) 56(84) bytes of data.
@@ -212,6 +231,9 @@ ARP request は ❺ 全員宛 (**ブロードキャスト**; MAC アドレスの
 
 (Shell ターミナル) パケットキャプチャの準備 @Host.A
 
+```sh
+ip netns exec ha tcpdump -nle
+```
 ```text
 root@nwtraining01:/# ip netns exec ha tcpdump -nle
 ...
@@ -221,6 +243,10 @@ root@nwtraining01:/# ip netns exec ha tcpdump -nle
 
 * いったん Host.A の ARP テーブルエントリをクリアしてから ping します
 
+```sh
+ha ip neigh flush dev ha-eth0
+ha ping -c3 192.168.0.3
+```
 ```text
 mininet> ha ip neigh flush dev ha-eth0
 mininet> ha ping -c3 192.168.0.3
@@ -236,6 +262,9 @@ rtt min/avg/max/mdev = 0.038/0.153/0.351/0.140 ms
 
 通信できていますが、これは Host.C/D どちらでしょうか?
 
+```sh
+ha ip neigh
+```
 ```text
 mininet> ha ip neigh
 192.168.0.3 dev ha-eth0 lladdr ❶00:00:5e:00:53:0d REACHABLE
@@ -269,6 +298,16 @@ Host.A でとっていた、ping したときのパケットキャプチャも�
 
 :bulb: 余裕があれば、以下の動作をパケットキャプチャで確認しながら追いかけてみてください。
 
+```text
+# (1)
+ha ip neigh
+# (2)
+hc ping -c3 ha
+# (3)
+ha ip neigh
+# (4)
+hc ping -c3 ha
+```
 ```text
 # (1)
 

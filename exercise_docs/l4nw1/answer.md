@@ -127,7 +127,7 @@ sa2 python3 -m http.server 8080 -d /exercise/l4nw1/docroot-sa2 --bind 192.168.0.
 
 回答 2: 現在動いている Web サーバプロセスを停止して、全てのポートで listen するように設定の上、起動し直す
 
-```bash
+```sh
 # sa2 で動作している Web サーバのプロセス ID を取り出して kill する
 sa2 ps -o pid,cmd | grep http.server | grep -v grep | sed -e 's/^\s*//' | cut -d' ' -f1 | xargs kill -9
 # Webサーバを起動する (--bind をつけない:デフォルトでは全てのインタフェースで listen します)
@@ -148,7 +148,7 @@ traceroute to 192.168.0.6 (192.168.0.6), 30 hops max, 60 byte packets
 
 回答 1: 足りないエントリを追加する
 
-```bash
+```sh
 rc ip route add 192.168.0.4/30 via 192.168.0.21
 ```
 
@@ -157,7 +157,7 @@ rc ip route add 192.168.0.4/30 via 192.168.0.21
 * Router.C にはデフォルトルートがないので、Router.B の設定と同等(対称)になるようデフォルトルートとして追加してもよいでしょう。
 * この場合、すでに入っているルートは冗長なので消しても問題ありません。
 
-```bash
+```sh
 rc ip route add default via 192.168.0.21
 rc ip route del 192.168.0.0/30
 rc ip route del 192.168.0.16/30

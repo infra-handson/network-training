@@ -78,7 +78,7 @@
 
 Host.A および Server.A-E いずれかに実際に設定を追加して通信可能にしてください。その際、以下のコマンドで Host.A → Server.A-E の通信が可能になることを達成条件とします。
 
-```bash
+```sh
 ha ping -c3 sa
 ha ping -c3 sb
 ha ping -c3 sc
@@ -90,7 +90,7 @@ ha ping -c3 se
 
 (Shell ターミナル) l3nw2 設定テスト実行
 
-```bash
+```sh
 cd /exercise
 ./nw_test.sh l3nw2
 ```
