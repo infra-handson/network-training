@@ -170,7 +170,7 @@ hb ps -Ho pid,args
 mininet> hb ps -Ho pid,args
     PID COMMAND
      77 bash --norc -is mininet:hb
-    104   python3 -m http.server 8000 -d /exercise/tutorial5/docroot-hb
+    104   python3 -m http.server 8000 -d /exercise/tutorial7/docroot-hb
     127   ps -Ho pid,args
 ```
 
@@ -254,7 +254,7 @@ Chain OUTPUT (policy ACCEPT 4 packets, 336 bytes)
 (Mininet ターミナル) パケットフィルタルール設定スクリプトの実行
 
 ```sh
-fa sh /exercise/tutorial5/fa_fw.sh
+fa sh /exercise/tutorial7/fa_fw.sh
 ```
 
 ### (a) 直接 CLI で変更
@@ -384,7 +384,7 @@ root@nwtraining01:/exercise/tutorial7# cat -n fa_fw_mod.sh
     12  iptables -A FORWARD -p icmp -j ACCEPT
     13  iptables -A FORWARD -s 192.168.0.0/24 -d 172.16.0.2/32 -p tcp --dport 8000 -j ACCEPT
     14  iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
-root@nwtraining01:/exercise/tutorial5# vi fa_fw_mod.sh
+root@nwtraining01:/exercise/tutorial7# vi fa_fw_mod.sh
 # 13行目の `-j ACCEPT` を `-j REJECT` に変更して保存
 ```
 
@@ -394,12 +394,12 @@ Code-server または vi で編集・ファイル保存したらスクリプト�
 
 ```sh
 # FWルール設定変更スクリプトの実行
-fa sh /exercise/tutorial5/fa_fw_mod.sh
+fa sh /exercise/tutorial7/fa_fw_mod.sh
 # 確認
 fa iptables -nvL --line-numbers
 ```
 ```text
-mininet> fa sh /exercise/tutorial5/fa_fw_mod.sh
+mininet> fa sh /exercise/tutorial7/fa_fw_mod.sh
 mininet> fa iptables -nvL --line-numbers
 Chain INPUT (policy ACCEPT 0 packets, 0 bytes)
 num   pkts bytes target     prot opt in     out     source               destination         
