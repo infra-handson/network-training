@@ -4,25 +4,6 @@
 ---
 <!-- /HEADER -->
 
-<!-- TOC -->
-
-- [演習を作る](#%E6%BC%94%E7%BF%92%E3%82%92%E4%BD%9C%E3%82%8B)
-  - [ディレクトリ構成](#%E3%83%87%E3%82%A3%E3%83%AC%E3%82%AF%E3%83%88%E3%83%AA%E6%A7%8B%E6%88%90)
-  - [環境の違い演習用と演習作成用](#%E7%92%B0%E5%A2%83%E3%81%AE%E9%81%95%E3%81%84%E6%BC%94%E7%BF%92%E7%94%A8%E3%81%A8%E6%BC%94%E7%BF%92%E4%BD%9C%E6%88%90%E7%94%A8)
-  - [演習ネットワークの作成](#%E6%BC%94%E7%BF%92%E3%83%8D%E3%83%83%E3%83%88%E3%83%AF%E3%83%BC%E3%82%AF%E3%81%AE%E4%BD%9C%E6%88%90)
-    - [演習スクリプトのデバッグ](#%E6%BC%94%E7%BF%92%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%97%E3%83%88%E3%81%AE%E3%83%87%E3%83%90%E3%83%83%E3%82%B0)
-    - [演習ネットワーク定義ファイルの作成と整合性テスト](#%E6%BC%94%E7%BF%92%E3%83%8D%E3%83%83%E3%83%88%E3%83%AF%E3%83%BC%E3%82%AF%E5%AE%9A%E7%BE%A9%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%81%AE%E4%BD%9C%E6%88%90%E3%81%A8%E6%95%B4%E5%90%88%E6%80%A7%E3%83%86%E3%82%B9%E3%83%88)
-  - [演習ドキュメントの作成](#%E6%BC%94%E7%BF%92%E3%83%89%E3%82%AD%E3%83%A5%E3%83%A1%E3%83%B3%E3%83%88%E3%81%AE%E4%BD%9C%E6%88%90)
-    - [ローカルWebサーバを起動してドキュメント参照](#%E3%83%AD%E3%83%BC%E3%82%AB%E3%83%ABweb%E3%82%B5%E3%83%BC%E3%83%90%E3%82%92%E8%B5%B7%E5%8B%95%E3%81%97%E3%81%A6%E3%83%89%E3%82%AD%E3%83%A5%E3%83%A1%E3%83%B3%E3%83%88%E5%8F%82%E7%85%A7)
-    - [Markdownの自動目次挿入](#markdown%E3%81%AE%E8%87%AA%E5%8B%95%E7%9B%AE%E6%AC%A1%E6%8C%BF%E5%85%A5)
-    - [ヘッダ・フッタの挿入](#%E3%83%98%E3%83%83%E3%83%80%E3%83%BB%E3%83%95%E3%83%83%E3%82%BF%E3%81%AE%E6%8C%BF%E5%85%A5)
-    - [演習ドキュメントの日本語チェック](#%E6%BC%94%E7%BF%92%E3%83%89%E3%82%AD%E3%83%A5%E3%83%A1%E3%83%B3%E3%83%88%E3%81%AE%E6%97%A5%E6%9C%AC%E8%AA%9E%E3%83%81%E3%82%A7%E3%83%83%E3%82%AF)
-    - [MarkdownをPDFに変換する](#markdown%E3%82%92pdf%E3%81%AB%E5%A4%89%E6%8F%9B%E3%81%99%E3%82%8B)
-  - [演習ネットワーク定義](#%E6%BC%94%E7%BF%92%E3%83%8D%E3%83%83%E3%83%88%E3%83%AF%E3%83%BC%E3%82%AF%E5%AE%9A%E7%BE%A9)
-  - [TODO](#todo)
-
-<!-- /TOC -->
-
 # 演習を作る
 
 ## ディレクトリ構成
@@ -90,11 +71,6 @@ export PYTHONPATH="$PYTHONPATH:$(pwd)/exercise/mn_builder"
 # npm install
 npx markserv -p 8642 -a 0.0.0.0 exercise_docs/
 ```
-
-### Markdownの自動目次挿入
-
-* w/VSCode, [Auto Markdown TOC - Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=xavierguarch.auto-markdown-toc)
-  * Command palette (Ctrl-Shift-p) → "Auto Markdown TOC: Insert/Update"
 
 ### ヘッダ・フッタの挿入
 
