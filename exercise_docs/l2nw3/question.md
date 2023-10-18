@@ -55,7 +55,7 @@
   * スイッチ・ポートの設定確認
     * `ovs-vsctl show`
   * インタフェース名とポート番号の対応確認
-    * `ovs-dpctl show`
+    * `ovs-ofctl show スイッチ名`
   * スイッチの STP 設定確認 (有効/無効)
     * `ovs-vsctl --columns name,stp_enable list Bridge`
 * スイッチの状態確認

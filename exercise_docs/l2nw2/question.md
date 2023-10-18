@@ -58,7 +58,7 @@
   * スイッチ・ポートの設定確認
     * `ovs-vsctl show`
   * インタフェース名とポート番号の対応確認
-    * `ovs-dpctl show`
+    * `ovs-ofctl show スイッチ名`
 * スイッチの状態確認
   * MAC アドレステーブル確認
     * `ovs-appctl fdb/show スイッチ名`
