@@ -44,7 +44,7 @@
 * ルーティングテーブルの操作 (静的経路の追加・削除)
   * `ip route add 宛先ネットワーク via 中継先ルータ(nexthop)IPアドレス`
   * `ip route del 宛先ネットワーク`
-+ L4 の通信確認 (:white_check_mark: 演習内では L4 はすべて Web サーバになっています)
++ L4 の通信確認 (:customs: 演習内では L4 はすべて Web サーバになっています)
   * `curl URL`
 * パケットキャプチャ (必要に応じて)
   * `tcpdump -l [-i インタフェース名]` : オプション `-l` がないとリアルタイムに表示されません。
@@ -60,7 +60,9 @@
 * Server.A1/A2 はそれぞれ 2 つのネットワークに接続しています。
 * Server.A1/A2 では Web サーバが 8080/tcp で起動しています。
   * アクセスすると、サーバ名をアスキーアートで表示します。
-  * :bulb: [http.server --- HTTP サーバ — Python 3.9.4 ドキュメント](https://docs.python.org/ja/3/library/http.server.html)
+
+> **Note**
+> [http.server --- HTTP サーバ — Python 3.9.4 ドキュメント](https://docs.python.org/ja/3/library/http.server.html)
 
 ## 問題1
 
@@ -81,15 +83,16 @@ Host.B/C から以下の IP/port (Serer.A1/A2 の IP/Port) に接続し、Web �
 
 問題 1 の表にある接続パターン全てについて、Web サーバ接続が成功するようにサーバ・ルータの設定を追加してください。
 
-:bulb: サーバプロセスの起動・停止
+> **Note**
+> サーバプロセスの起動・停止については下記参照してください
 
 <details>
 
 <summary>サーバプロセスの起動</summary>
 
 Mininet ホストでサーバアプリケーションをバックグラウンド実行することによって実現できます。
-- :white_check_mark: この環境内では Python の http モジュールを使用して Web サーバとしています。(コマンド末尾の `&` がバックグラウンド実行を指定しています。)
-- :bulb: 実行オプションについては [http.server --- HTTP サーバ — Python 3.9.4 ドキュメント](https://docs.python.org/ja/3/library/http.server.html) 参照
+- :customs: この環境内では Python の http モジュールを使用して Web サーバとしています。(コマンド末尾の `&` がバックグラウンド実行を指定しています。)
+- 実行オプションについては [http.server --- HTTP サーバ — Python 3.9.4 ドキュメント](https://docs.python.org/ja/3/library/http.server.html) 参照
 
 ```sh
 # Mininet ターミナル

@@ -37,7 +37,6 @@
 - [exercise_docs](/exercise_docs/) 各ディレクトリ内にはオリジナルの演習ネットワーク定義ファイル (YAML) をおきます。
   - 演習ドキュメント・演習ネットワーク定義の元ファイル等、1 つのシナリオで使う素材をまとめておきます。
 - YAML で作成した演習ネットワーク定義ファイルを、下記 `topology_checker.py` で json に変換して演習ディレクトリ ([exercise](/exercise/)) に入れます。
-  - __:warning: yaml 編集後、json に変換して exercise 下に置くのを忘れずに。__
 - "ModuleNotFoundError: No module named 'declared_topology'" となる場合は `PYTHONPATH` を設定してください。
 
 ```sh
@@ -139,6 +138,10 @@ npx md-to-pdf --config-file .md2pdf.js exercise_docs/**/*.md
 
 演習ネットワーク定義ファイルのデータ構造
 
+> **Warning**
+> * インタフェース名 (veth) については使えない文字・最大長(15 文字)制限があります
+> * リンク端点 (tp: termination-point) に sub-interface は指定できません
+
 - `nodes`: _Array\<Node\>_
 - `links`: _Array\<Link\>_
 - _Node_:
@@ -171,7 +174,6 @@ npx md-to-pdf --config-file .md2pdf.js exercise_docs/**/*.md
   - `name`: _String_
     - インタフェース名 = オブジェクト識別子
     - mininet 的には全てのノードの名前が見えるので、`hostanme-ethX` の形で指定するのを推奨
-    - __:warning: veth については使えない文字・最大長(15 文字)制限があります__
   - `mac_addr`[optional]: _String_ MAC address (e.g. `00:00:5e:00:53:00`)
     - MAC アドレス
     - インタフェースを持つノードが type `switch` **以外**の場合に有効
@@ -210,7 +212,6 @@ npx md-to-pdf --config-file .md2pdf.js exercise_docs/**/*.md
   - `note`[optional]: _String_
     - コメント (json 使用時のコメント欄)
 - _Link_:
-  - __:warning: リンク端点 (tp: termination-point) に sub-interface は指定できない__
   - `node1` : _String_
     - リンク端点 1 のノード名
   - `intf1` : _String_
@@ -224,7 +225,8 @@ npx md-to-pdf --config-file .md2pdf.js exercise_docs/**/*.md
 
 ## TODO
 
-- :warning: IPv6 には今の所対応していません
+> **Important**
+> IPv6 には対応していません
 
 <!-- FOOTER -->
 

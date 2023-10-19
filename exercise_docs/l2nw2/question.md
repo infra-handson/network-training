@@ -79,7 +79,7 @@
 * Host.B → Host.D へ ping を送信したときのパケットの経路を、通過するインタフェース(リンク) 単位ですべて列挙してください。
   * hb-eth0 → sw2-eth2 → ... → sw2-eth3 → hd-eth0
 * question a/b で、各スイッチおよびルータの設定の違いを説明してください。
-  * :bulb: VLAN access port, VLAN trunk port, Linux サブインタフェース (Router.A)
+  * キーワード: VLAN access port, VLAN trunk port, Linux サブインタフェース (Router.A)
   * JSON ファイルを見てもわかりますが、できればそれぞれの環境でスイッチの設定やポートの状態を確認して考えてみてください。
 
 ## 問題3

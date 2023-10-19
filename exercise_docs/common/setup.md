@@ -8,15 +8,13 @@ Previous << [README](/README.md) >> [Next](../common/make_exercise.md)
 
 ## システム構成
 
-:warning:[2021-08-16]構成上の問題点
-
-1-VM : N-Container 構成の場合、特定の問題を複数コンテナ内部で起動した際に問題がおきる。
-
-* コンテナ内部で mininet が作成した veth インタフェースはホスト側 OS で作成されている。複数コンテナで同じ演習ネットワークを起動しようとすると、同名のインタフェースを作ろうとしてエラーになる。
-  * コンテナ内部で mininet が作成する論理ネットワークリソースは Linux OS 側で用意するもの。コンテナは OS の機能についてはコンテナホスト側の機能を使用している。そのため別コンテナであっても OS 側で同じリソースを複数作ろうとする状況が起きると競合が発生してしまう。
-  * 少なくとも root namespace で起動している OVS に接続する veth についてはホスト Linux 側から見える状態になっている。OVS を namespace 内に閉じて使う機能は mininet にはない。(OVS 自体、kernel module を使っていたり unix domain socket 経由の client/server 型になっていたりでそうした分割隔離した環境で動かす想定がない。)
-
-**演習コンテナは 1-OS : 1-Container 形式で使用すること**
+> **Warning**
+> [2021-08-16]構成上の問題点; 1-VM : N-Container 構成の場合、特定の問題を複数コンテナ内部で起動した際に問題がおきる。
+> * コンテナ内部で mininet が作成した veth インタフェースはホスト側 OS で作成されている。複数コンテナで同じ演習ネットワークを起動しようとすると、同名のインタフェースを作ろうとしてエラーになる。
+>   * コンテナ内部で mininet が作成する論理ネットワークリソースは Linux OS 側で用意するもの。コンテナは OS の機能についてはコンテナホスト側の機能を使用している。そのため別コンテナであっても OS 側で同じリソースを複数作ろうとする状況が起きると競合が発生してしまう。
+>   * 少なくとも root namespace で起動している OVS に接続する veth についてはホスト Linux 側から見える状態になっている。OVS を namespace 内に閉じて使う機能は mininet にはない。(OVS 自体、kernel module を使っていたり unix domain socket 経由の client/server 型になっていたりでそうした分割隔離した環境で動かす想定がない。)
+>
+> **演習コンテナは 1-OS : 1-Container 形式で使用すること**
 
 ![structure](structure.drawio.svg)
 
@@ -180,7 +178,8 @@ cd network-training
 
 ## Composeファイルのバージョンと警告メッセージ
 
-:warning: docker-compose でマルチステージビルドによる使い分けをするため、compose ファイルのバージョンを 3 系に変更しました。その際、CPU/Memory の上限設定を `deploy` セクションの内容に置き換えています。これは swarm mode のときに使用されるものなので、通常の docker-compose では `--compatibility` オプションをつけて実行する必要があります。(参照: [Compatibility Mode | Compose file versions and upgrading | Docker Documentation](https://docs.docker.com/compose/compose-file/compose-versioning/#compatibility-mode))
+> **Warning**
+> docker-compose でマルチステージビルドによる使い分けをするため、compose ファイルのバージョンを 3 系に変更しました。その際、CPU/Memory の上限設定を `deploy` セクションの内容に置き換えています。これは swarm mode のときに使用されるものなので、通常の docker-compose では `--compatibility` オプションをつけて実行する必要があります。(参照: [Compatibility Mode | Compose file versions and upgrading | Docker Documentation](https://docs.docker.com/compose/compose-file/compose-versioning/#compatibility-mode))
 
 ```text
 WARNING: Some services (lab) use the 'deploy' key, which will be ignored. Compose does not support 'deploy' configuration - use `docker stack deploy` to deploy to a swarm.
@@ -239,7 +238,8 @@ docker push ghcr.io/infra-handson/network-training:latest
 
 <summary>Obsoleted (for Gitlab)</summary>
 
-:warning: 二要素認証 (2FA) 有効にしている場合は `read_registry`+`write_registry` 権限をもつアクセストークンでログインが必要。
+> **Warning**
+> 二要素認証 (2FA) 有効にしている場合は `read_registry`+`write_registry` 権限をもつアクセストークンでログインが必要。
 
 - ref: [Gitlabの2段階認証下でコンテナレジストリにPushする方法 | codit](https://www.codit.work/notes/p8deveys7r07s5nmwfa8/)
 - ref: [Docker Registry Login with 2FA - How to Use GitLab - GitLab Forum](https://forum.gitlab.com/t/docker-registry-login-with-2fa/6719)
@@ -257,11 +257,12 @@ docker push registry.gitlab.com/corestate55/network_practice:latest
 
 ## 演習コンテナを起動する
 
-:warning: docker-compose で `--compatibility` オプションがない場合、警告メッセージ `WARNING: Some services (lab) use the 'deploy' key, which will be ignored. Compose does not support 'deploy' configuration` が表示されます。コンテナ起動時にこのメッセージが表示されている場合、CPU/Memory 上限設定が無視されているので、いったん止めてからオプションをつけて再起動させてください。
+> **Warning**
+> docker-compose で `--compatibility` オプションがない場合、警告メッセージ `WARNING: Some services (lab) use the 'deploy' key, which will be ignored. Compose does not support 'deploy' configuration` が表示されます。コンテナ起動時にこのメッセージが表示されている場合、CPU/Memory 上限設定が無視されているので、いったん止めてからオプションをつけて再起動させてください。
 
-:warning: セキュリティ面の注意事項
-
-* 演習コンテナは特権モードで起動します。(compose ファイル内のオプションで指定してあります)。コンテナが特権モードで動く (コンテナ内では root が使える) ため、不正利用された場合に機能制限ができません。
+> **Warning**
+> セキュリティ面の注意事項
+> * 演習コンテナは特権モードで起動します。(compose ファイル内のオプションで指定してあります)。コンテナが特権モードで動く (コンテナ内では root が使える) ため、不正利用された場合に機能制限ができません。
 
 ```sh
 # cd ~/network-training

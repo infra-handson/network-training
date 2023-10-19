@@ -180,7 +180,8 @@ Host.B にも経路情報を設定しないと Host.A-B 間の通信は成立し
 
 (Mininet ターミナル) Host.B にデフォルトルートを設定する
 
-* :warning: `default` キーワードは宛先 0.0.0.0/0 と同等です
+> **Note**
+> `default` キーワードは宛先 0.0.0.0/0 と同等です
 
 ```sh
 hb ip route add default via 172.16.0.254
