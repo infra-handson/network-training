@@ -120,18 +120,14 @@ ra ip neigh
 (Shell ターミナル) Switch.1 のポート番号の確認
 * OS 上のインタフェース名 `sw1-ethX` と、スイッチ内部で扱うポート番号 `port N` の対応
 * これは環境起動ごとに変わる可能性があります。各自の環境での対応を確認してください。
-
+```sh
+ovs-ofctl show sw1 | grep sw1-eth
+```
 ```text
-root@nwtraining01:/# ovs-dpctl show
-system@ovs-system:
-  lookups: hit:36 missed:60 lost:0
-  flows: 0
-  masks: hit:107 total:0 hit/pkt:1.11
-  port 0: ovs-system (internal)
-  port 1: sw1-eth1
-  port 2: sw1-eth0
-  port 3: sw1-eth2
-  port 4: sw1 (internal)
+mininet> sh ovs-ofctl show sw1 | grep sw1-eth
+ 1(sw1-eth1): addr:16:31:db:7b:47:03
+ 2(sw1-eth2): addr:fe:03:f7:bb:7a:ff
+ 3(sw1-eth0): addr:1a:41:31:85:e4:08
 ```
 
 (Shell ターミナル) Switch.1 の MAC アドレステーブルの確認

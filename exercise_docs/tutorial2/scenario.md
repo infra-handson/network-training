@@ -130,19 +130,13 @@ L2 スイッチ (Switch.1) は IP アドレスを持ちません。L2 スイッ�
   * このようにスイッチ内部のインタフェース番号とインタフェース名(の番号)が一致する・順番を維持するものではありません。
 
 ```sh
-ovs-dpctl show
+ovs-ofctl show sw1 | grep sw1-eth
 ```
 ```text
-root@nwtraining01:/# ovs-dpctl show
-system@ovs-system:
-  lookups: hit:12 missed:15 lost:0
-  flows: 0
-  masks: hit:24 total:0 hit/pkt:0.89
-  port 0: ovs-system (internal)
-  port 1: sw1-eth1
-  port 2: sw1-eth0
-  port 3: sw1-eth2
-  port 4: sw1 (internal)
+mininet> sh ovs-ofctl show sw1 | grep sw1-eth
+ 1(sw1-eth0): addr:42:50:3a:ea:a1:d5
+ 2(sw1-eth1): addr:a6:06:8b:58:fc:0f
+ 3(sw1-eth2): addr:8a:bf:f0:b2:58:82
 ```
 
 (Shell ターミナル) Switch.1 の MAC アドレステーブルの確認

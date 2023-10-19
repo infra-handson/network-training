@@ -223,7 +223,7 @@ mininet> sa ip -d link show sa-eth0.10
   - [Open vSwitch 2.15.90 Documentation](https://www.openvswitch.org/support/dist-docs/)
     - OSDB Schema (図): http://www.openvswitch.org//ovs-vswitchd.conf.db.5.pdf
     - [ovs-vsctl](https://www.openvswitch.org/support/dist-docs/ovs-vsctl.8.txt)
-    - [ovs-dpctl](http://www.openvswitch.org/support/dist-docs/ovs-dpctl.8.txt)
+    - [ovs-ofctl](http://www.openvswitch.org/support/dist-docs/ovs-ofctl.8.txt)
     - [ovs-appctl](https://www.openvswitch.org/support/dist-docs/ovs-appctl.8.txt)
 - スイッチの設定情報確認
   - `ovs-vsctl show`
@@ -241,7 +241,7 @@ mininet> sa ip -d link show sa-eth0.10
 - スイッチの MAC アドレステーブルの消去
   - `ovs-appctl fdb/flush [スイッチ名]`
 - ポート名とポート番号の確認
-  - `ovs-dpctl show`
+  - `ovs-ofctl show [スイッチ名]`
   - `ovs-vsctl --columns=name,ofport list Interface [ポート名]`
 - ポート (インタフェース) の状態確認
   - `ovs-vsctl list Port [ポート名]`

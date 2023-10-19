@@ -222,22 +222,16 @@ Switch.1 の MAC アドレステーブルを確認してみましょう。
 
 ```sh
 # OVS ポート番号/インタフェース名の対応確認
-sh ovs-dpctl show
+sh ovs-ofctl show sw1 | grep sw1-eth
 # MAC アドレステーブルの表示
 sh ovs-appctl fdb/show sw1
 ```
 ```text
-mininet> sh ovs-dpctl show
-system@ovs-system:
-  lookups: hit:25 missed:35 lost:0
-  flows: 0
-  masks: hit:70 total:0 hit/pkt:1.17
-  port 0: ovs-system (internal)
-  port 1: sw1-eth1
-  port 2: sw1-eth3
-  port 3: sw1-eth4
-  port 4: sw1-eth2
-  port 5: sw1 (internal)
+mininet> sh ovs-ofctl show sw1 | grep sw1-eth
+ 1(sw1-eth1): addr:3a:16:f2:ec:0a:f6
+ 2(sw1-eth2): addr:0e:f6:69:9d:6a:96
+ 3(sw1-eth3): addr:4a:fb:99:0b:25:a4
+ 4(sw1-eth4): addr:c6:a6:17:1a:17:a4
 mininet> 
 mininet> sh ovs-appctl fdb/show sw1
  port  VLAN  MAC                Age
@@ -581,24 +575,19 @@ Switch.1 の MAC アドレステーブルでは、以下のようになります
 
 ```sh
 # ポート名とポート番号の対応
-ovs-dpctl show
+sh ovs-ofctl show sw1 | grep sw1-eth
+sh ovs-ofctl show sw2 | grep sw2-eth
 # MAC アドレステーブル
 ovs-appctl fdb/show sw1
 ```
 ```text
-root@nwtraining01:/# ovs-dpctl show
-system@ovs-system:
-  lookups: hit:69 missed:115 lost:0
-  flows: 0
-  masks: hit:461 total:0 hit/pkt:2.51
-  port 0: ovs-system (internal)
-  port 1: sw1-eth1
-  port 2: sw1-eth0
-  port 3: sw1 (internal)
-  port 4: sw2-eth0
-  port 5: sw2-eth2
-  port 6: sw2-eth1
-  port 7: sw2 (internal)
+mininet> sh ovs-ofctl show sw1 | grep sw1-eth
+ 1(sw1-eth1): addr:6a:38:a6:75:ed:6e
+ 2(sw1-eth0): addr:ca:c5:33:40:59:b2
+mininet> sh ovs-ofctl show sw2 | grep sw2-eth
+ 1(sw2-eth0): addr:0a:b5:fc:d3:fd:d5
+ 2(sw2-eth1): addr:26:b6:92:cc:14:b1
+ 3(sw2-eth2): addr:8a:c8:3d:21:41:9b
 root@nwtraining01:/# 
 root@nwtraining01:/# ovs-appctl fdb/show sw1
  port  VLAN  MAC                Age
