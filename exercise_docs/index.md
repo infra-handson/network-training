@@ -23,6 +23,12 @@
 
 </details>
 
+## ドキュメントの目次
+
+Github で参照する場合自動で生成されます。
+
+![ToC icon](./common/toc-icon.png)
+
 ## リファレンス
 
 * [コマンドリスト](./common/command_list.md)
