@@ -4,22 +4,12 @@
 ---
 <!-- /HEADER -->
 
-<!-- TOC -->
-
-- [App-2 問題編](#app-2-%E5%95%8F%E9%A1%8C%E7%B7%A8)
-  - [前置き](#%E5%89%8D%E7%BD%AE%E3%81%8D)
-  - [シナリオ](#%E3%82%B7%E3%83%8A%E3%83%AA%E3%82%AA)
-  - [構成図](#%E6%A7%8B%E6%88%90%E5%9B%B3)
-  - [問題1](#%E5%95%8F%E9%A1%8C1)
-  - [問題2](#%E5%95%8F%E9%A1%8C2)
-
-<!-- /TOC -->
-
 # App-2 (問題編)
 
 ## 前置き
 
-:warning: App-2 は __机上検討のみです。ハンズオンはありません。__
+> **Note**
+> App-2 は __机上検討のみ__ です。ハンズオンはありません。
 
 * [L3NW-2](../l3nw2/question.md) L3 基礎
 * [App-1](../app1/question.md) T 社は App-1 で登場した T 社です
@@ -63,7 +53,8 @@ T 社は A 社と合併することになりました。それにともなって
 * A 社関西支社から X 社 Web サーバへの `traceroute` を実行すると、A 社台湾支社のルータから応答があります。
 * T 社内から X 社 Web サーバへの `traceroute` はインターネット経由での経路情報が返ってきます。
 
-:bulb: [AS21928 T-Mobile USA, Inc. - bgp.he.net](https://bgp.he.net/AS21928#_prefixes)
+> **Note**
+> [AS21928 T-Mobile USA, Inc. - bgp.he.net](https://bgp.he.net/AS21928#_prefixes)
 
 <!-- FOOTER -->
 

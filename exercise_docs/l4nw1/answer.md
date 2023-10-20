@@ -4,20 +4,6 @@
 ---
 <!-- /HEADER -->
 
-<!-- TOC -->
-
-- [L4NW-1 解説編](#l4nw-1-%E8%A7%A3%E8%AA%AC%E7%B7%A8)
-  - [問題1](#%E5%95%8F%E9%A1%8C1)
-    - [No.4/8 について](#no48-%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6)
-    - [No.7 について](#no7-%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6)
-  - [問題2](#%E5%95%8F%E9%A1%8C2)
-    - [Server.A2サーバプロセスの修正](#servera2%E3%82%B5%E3%83%BC%E3%83%90%E3%83%97%E3%83%AD%E3%82%BB%E3%82%B9%E3%81%AE%E4%BF%AE%E6%AD%A3)
-    - [L3経路の修正](#l3%E7%B5%8C%E8%B7%AF%E3%81%AE%E4%BF%AE%E6%AD%A3)
-  - [補足 Reverse Path Filter](#%E8%A3%9C%E8%B6%B3-reverse-path-filter)
-  - [まとめ](#%E3%81%BE%E3%81%A8%E3%82%81)
-
-<!-- /TOC -->
-
 # L4NW-1 (解説編)
 
 図 1: 回答用のファイルがあります (`exercise/l4nw1/answer.json`)
@@ -69,8 +55,7 @@ rtt min/avg/max/mdev = 0.055/0.055/0.055/0.000 ms
 mininet> 
 ```
 
-サーバプロセスの設定を確認してみます。Server.A1 では特にオプション指定がありませんが(❶)、Server.A2 では `--bind` オプションつきでサーバが起動しています(❷)。これは、サーバプロセスが listen するアドレスを指定するオプションです。
-* :bulb: [http.server --- HTTP サーバ — Python 3.9.4 ドキュメント](https://docs.python.org/ja/3/library/http.server.html)
+サーバプロセスの設定を確認してみます。Server.A1 では特にオプション指定がありませんが(❶)、Server.A2 では `--bind` オプションつきでサーバが起動しています(❷)。これは、サーバプロセスが listen するアドレスを指定するオプションです。(参考: [http.server --- HTTP サーバ — Python 3.9.4 ドキュメント](https://docs.python.org/ja/3/library/http.server.html))
 
 ```text
 mininet> sa1 ps -o pid,args
@@ -165,7 +150,8 @@ rc ip route del 192.168.0.16/30
 
 ## (補足) Reverse Path Filter
 
-:white_check_mark: Linux の場合、**Reverse Path Filter (RPF)** という機能があります。図 1 のような構成でトラブルを防止するために使用される機能ですが、本演習ではあえて無効化してあります。(応用的な内容なので興味のある人向け。)
+> **Note**
+> Linux の場合、**Reverse Path Filter (RPF)** という機能があります。図 1 のような構成でトラブルを防止するために使用される機能ですが、本演習ではあえて無効化してあります。(応用的な内容なので興味のある人向け。)
 
 <details>
 
@@ -180,8 +166,10 @@ Linux の場合、Reverse Path Filter (RPF) という機能があります。こ
 
 :customs: 本演習 (L4NW-1 だけでなく他の演習すべて) の前提として、あえて厄介な状況をつくるために厳密な RPF を有効にしていません。したがって、他の環境でも常にこの演習と同様の挙動を取るとは限りません。「設定によってはこういう動作をすることもある」程度で捉えてください。
 
-* :warning: ベストプラクティスとしては RPF を有効にすることが推奨されています。実際の案件で複数のインタフェース (複数の IP アドレス) をもつサーバを構築する際には、これらの機能の設定がどうなっているかに注意してください。(Linux でもバージョンやディストリビューションによってデフォルトの設定が異なっている可能性があります。)
-* 参考: [IPv4 リバース パス フィルタリングを使用するようにホスト システムを構成する](https://docs.vmware.com/jp/vRealize-Operations-Manager/8.4/com.vmware.vcom.core.doc/GUID-0AAA4D96-5FDE-49A7-8BB3-D7F56C89137C.html)
+> **Important**
+> ベストプラクティスとしては RPF を有効にすることが推奨されています。実際の案件で複数のインタフェース (複数の IP アドレス) をもつサーバを構築する際には、これらの機能の設定がどうなっているかに注意してください。(Linux でもバージョンやディストリビューションによってデフォルトの設定が異なっている可能性があります。)
+> 
+> 参考: [IPv4 リバース パス フィルタリングを使用するようにホスト システムを構成する](https://docs.vmware.com/jp/vRealize-Operations-Manager/8.4/com.vmware.vcom.core.doc/GUID-0AAA4D96-5FDE-49A7-8BB3-D7F56C89137C.html)
 
 </details>
 

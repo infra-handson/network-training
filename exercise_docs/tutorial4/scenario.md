@@ -4,29 +4,6 @@
 ---
 <!-- /HEADER -->
 
-<!-- TOC -->
-
-- [チュートリアル4](#%E3%83%81%E3%83%A5%E3%83%BC%E3%83%88%E3%83%AA%E3%82%A2%E3%83%AB4)
-  - [このチュートリアルの目的](#%E3%81%93%E3%81%AE%E3%83%81%E3%83%A5%E3%83%BC%E3%83%88%E3%83%AA%E3%82%A2%E3%83%AB%E3%81%AE%E7%9B%AE%E7%9A%84)
-  - [VLAN Virtual LAN](#vlan-virtual-lan)
-  - [VLANによるブロードキャストドメインの分割](#vlan%E3%81%AB%E3%82%88%E3%82%8B%E3%83%96%E3%83%AD%E3%83%BC%E3%83%89%E3%82%AD%E3%83%A3%E3%82%B9%E3%83%88%E3%83%89%E3%83%A1%E3%82%A4%E3%83%B3%E3%81%AE%E5%88%86%E5%89%B2)
-    - [初期状態の確認](#%E5%88%9D%E6%9C%9F%E7%8A%B6%E6%85%8B%E3%81%AE%E7%A2%BA%E8%AA%8D)
-    - [スイッチの設定を確認する](#%E3%82%B9%E3%82%A4%E3%83%83%E3%83%81%E3%81%AE%E8%A8%AD%E5%AE%9A%E3%82%92%E7%A2%BA%E8%AA%8D%E3%81%99%E3%82%8B)
-    - [ノード間通信確認](#%E3%83%8E%E3%83%BC%E3%83%89%E9%96%93%E9%80%9A%E4%BF%A1%E7%A2%BA%E8%AA%8D)
-    - [ノード間通信確認 IPアドレス重複](#%E3%83%8E%E3%83%BC%E3%83%89%E9%96%93%E9%80%9A%E4%BF%A1%E7%A2%BA%E8%AA%8D-ip%E3%82%A2%E3%83%89%E3%83%AC%E3%82%B9%E9%87%8D%E8%A4%87)
-    - [スイッチL2テーブル確認](#%E3%82%B9%E3%82%A4%E3%83%83%E3%83%81l2%E3%83%86%E3%83%BC%E3%83%96%E3%83%AB%E7%A2%BA%E8%AA%8D)
-  - [VLAN で使用するポートの種類と役割](#vlan-%E3%81%A7%E4%BD%BF%E7%94%A8%E3%81%99%E3%82%8B%E3%83%9D%E3%83%BC%E3%83%88%E3%81%AE%E7%A8%AE%E9%A1%9E%E3%81%A8%E5%BD%B9%E5%89%B2)
-    - [演習ネットワークの切替](#%E6%BC%94%E7%BF%92%E3%83%8D%E3%83%83%E3%83%88%E3%83%AF%E3%83%BC%E3%82%AF%E3%81%AE%E5%88%87%E6%9B%BF)
-    - [スイッチの設定を確認する](#%E3%82%B9%E3%82%A4%E3%83%83%E3%83%81%E3%81%AE%E8%A8%AD%E5%AE%9A%E3%82%92%E7%A2%BA%E8%AA%8D%E3%81%99%E3%82%8B)
-    - [ホスト側トランクポート設定確認](#%E3%83%9B%E3%82%B9%E3%83%88%E5%81%B4%E3%83%88%E3%83%A9%E3%83%B3%E3%82%AF%E3%83%9D%E3%83%BC%E3%83%88%E8%A8%AD%E5%AE%9A%E7%A2%BA%E8%AA%8D)
-    - [補足 インタフェースのVLAN設定確認](#%E8%A3%9C%E8%B6%B3-%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%95%E3%82%A7%E3%83%BC%E3%82%B9%E3%81%AEvlan%E8%A8%AD%E5%AE%9A%E7%A2%BA%E8%AA%8D)
-    - [補足 インタフェース・サブインタフェースの依存関係の確認](#%E8%A3%9C%E8%B6%B3-%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%95%E3%82%A7%E3%83%BC%E3%82%B9%E3%83%BB%E3%82%B5%E3%83%96%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%95%E3%82%A7%E3%83%BC%E3%82%B9%E3%81%AE%E4%BE%9D%E5%AD%98%E9%96%A2%E4%BF%82%E3%81%AE%E7%A2%BA%E8%AA%8D)
-    - [補足 VLANアクセスポートとトランクポート](#%E8%A3%9C%E8%B6%B3-vlan%E3%82%A2%E3%82%AF%E3%82%BB%E3%82%B9%E3%83%9D%E3%83%BC%E3%83%88%E3%81%A8%E3%83%88%E3%83%A9%E3%83%B3%E3%82%AF%E3%83%9D%E3%83%BC%E3%83%88)
-    - [ノード間通信確認](#%E3%83%8E%E3%83%BC%E3%83%89%E9%96%93%E9%80%9A%E4%BF%A1%E7%A2%BA%E8%AA%8D)
-  - [チュートリアル4のまとめ](#%E3%83%81%E3%83%A5%E3%83%BC%E3%83%88%E3%83%AA%E3%82%A2%E3%83%AB4%E3%81%AE%E3%81%BE%E3%81%A8%E3%82%81)
-
-<!-- /TOC -->
-
 # チュートリアル4
 
 ## このチュートリアルの目的
@@ -45,7 +22,8 @@
 
 古典的な Ethernet (L2 ネットワーク) は、[チュートリアル 2](../tutorial2/scenario.md)・[チュートリアル 3](../tutorial3/scenario.md) のように 1-switch : 1-L2 セグメントでした。このようにネットワーク機器と L2 セグメントが 1:1 に結びついてしまうと、セグメントを増やすたびに、そのセグメント用の機器を増やす (買い足す) ことになります。そうなってしまうと、ネットワークの拡張性・柔軟性・リソースの利用効率などの面で対応が難しくなります。そのため、1 つのネットワーク機器に複数の L2 セグメントを実現するための機能 : **VLAN** が考えられました。VLAN は **IEEE 802.1Q** という規格で標準化されており、多くの機器で共通して使用できます。
 
-:white_check_mark: VLAN を実現するためのプロトコルは IEEE 802.1Q 以外にもありますが、802.1Q 以外を使うことはまずありません。
+> **Note**
+> VLAN を実現するためのプロトコルは IEEE 802.1Q 以外にもありますが、802.1Q 以外を使うことはまずありません。
 
 VLAN は 1 つの物理リソースを複数個の論理リソースに見せるタイプの仮想化技術です。そのメリットは、同じタイプの仮想化技術 (1→複数) である仮想マシン (VM, Virtual Machine) やコンテナを使うメリットに似ています。アプリケーションを動かす際、VM を使用することで、1 つのサーバリソースを複数の OS (その上のアプリケーション) で共有できます。これによって、大きな物理リソース (サーバが持つ計算機資源) を複数の OS/アプリケーションで共有したり配分を変えるなど、リソース利用率やシステムの拡張性・柔軟性が向上しました。VLAN も同様で、物理的なネットワーク(機器)資源を複数の L2 セグメントで共有し、利用効率・拡張性・柔軟性を向上させるために使われています。
 
@@ -245,22 +223,16 @@ Switch.1 の MAC アドレステーブルを確認してみましょう。
 
 ```sh
 # OVS ポート番号/インタフェース名の対応確認
-sh ovs-dpctl show
+sh ovs-ofctl show sw1 | grep sw1-eth
 # MAC アドレステーブルの表示
 sh ovs-appctl fdb/show sw1
 ```
 ```text
-mininet> sh ovs-dpctl show
-system@ovs-system:
-  lookups: hit:25 missed:35 lost:0
-  flows: 0
-  masks: hit:70 total:0 hit/pkt:1.17
-  port 0: ovs-system (internal)
-  port 1: sw1-eth1
-  port 2: sw1-eth3
-  port 3: sw1-eth4
-  port 4: sw1-eth2
-  port 5: sw1 (internal)
+mininet> sh ovs-ofctl show sw1 | grep sw1-eth
+ 1(sw1-eth1): addr:3a:16:f2:ec:0a:f6
+ 2(sw1-eth2): addr:0e:f6:69:9d:6a:96
+ 3(sw1-eth3): addr:4a:fb:99:0b:25:a4
+ 4(sw1-eth4): addr:c6:a6:17:1a:17:a4
 mininet> 
 mininet> sh ovs-appctl fdb/show sw1
  port  VLAN  MAC                Age
@@ -409,14 +381,15 @@ ha-eth0 について以下のようになっています。
 これは Linux で 1 つの物理ポートに複数の IP アドレスを設定する際に使用される機能で、**サブインタフェース** と呼ばれます。
 Host.A はこのサブインタフェースを使って trunk port を実現しています。そのため、Switch.1-2 間と同じ形で Switch.1-Host.A 間を接続できています。
 
+### (補足) サブインタフェースについて
+
 :customs: サブインタフェースの命名ルール:
 
 * 演習中でサブインタフェースを使用する場合、以下のルールでインタフェース名が設定されています。
   * 物理インタフェース : "ホスト名 - ethX"
   * サブインタフェース : "物理インタフェース名 **.** VLAN-ID" (ホスト名-ethX.N)
 
-:white_check_mark: サブインタフェースの特徴:
-
+サブインタフェースの特徴:
 * サブインタフェースは、親(物理)インタフェースの設定を受け継ぎません。独立したインタフェースとして設定されます。
 * サブインタフェースは論理的なインタフェースで、物理インタフェースと同等に扱えます。物理インタフェースとの "親子関係" や、VLAN ID 設定についてはオプションを指定して情報表示することで確認できます。
 
@@ -604,24 +577,19 @@ Switch.1 の MAC アドレステーブルでは、以下のようになります
 
 ```sh
 # ポート名とポート番号の対応
-ovs-dpctl show
+sh ovs-ofctl show sw1 | grep sw1-eth
+sh ovs-ofctl show sw2 | grep sw2-eth
 # MAC アドレステーブル
 ovs-appctl fdb/show sw1
 ```
 ```text
-root@nwtraining01:/# ovs-dpctl show
-system@ovs-system:
-  lookups: hit:69 missed:115 lost:0
-  flows: 0
-  masks: hit:461 total:0 hit/pkt:2.51
-  port 0: ovs-system (internal)
-  port 1: sw1-eth1
-  port 2: sw1-eth0
-  port 3: sw1 (internal)
-  port 4: sw2-eth0
-  port 5: sw2-eth2
-  port 6: sw2-eth1
-  port 7: sw2 (internal)
+mininet> sh ovs-ofctl show sw1 | grep sw1-eth
+ 1(sw1-eth1): addr:6a:38:a6:75:ed:6e
+ 2(sw1-eth0): addr:ca:c5:33:40:59:b2
+mininet> sh ovs-ofctl show sw2 | grep sw2-eth
+ 1(sw2-eth0): addr:0a:b5:fc:d3:fd:d5
+ 2(sw2-eth1): addr:26:b6:92:cc:14:b1
+ 3(sw2-eth2): addr:8a:c8:3d:21:41:9b
 root@nwtraining01:/# 
 root@nwtraining01:/# ovs-appctl fdb/show sw1
  port  VLAN  MAC                Age

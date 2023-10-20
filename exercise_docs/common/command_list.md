@@ -4,36 +4,10 @@ Previous << [Index](../index.md) >> [Next](../common/glossary.md)
 ---
 <!-- /HEADER -->
 
-<!-- TOC -->
-
-- [コマンドリスト](#%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E3%83%AA%E3%82%B9%E3%83%88)
-  - [演習コンテナ操作](#%E6%BC%94%E7%BF%92%E3%82%B3%E3%83%B3%E3%83%86%E3%83%8A%E6%93%8D%E4%BD%9C)
-    - [コンテナの起動確認・起動](#%E3%82%B3%E3%83%B3%E3%83%86%E3%83%8A%E3%81%AE%E8%B5%B7%E5%8B%95%E7%A2%BA%E8%AA%8D%E3%83%BB%E8%B5%B7%E5%8B%95)
-    - [コンテナに入る・出る](#%E3%82%B3%E3%83%B3%E3%83%86%E3%83%8A%E3%81%AB%E5%85%A5%E3%82%8B%E3%83%BB%E5%87%BA%E3%82%8B)
-  - [演習ネットワークの操作](#%E6%BC%94%E7%BF%92%E3%83%8D%E3%83%83%E3%83%88%E3%83%AF%E3%83%BC%E3%82%AF%E3%81%AE%E6%93%8D%E4%BD%9C)
-    - [起動・停止](#%E8%B5%B7%E5%8B%95%E3%83%BB%E5%81%9C%E6%AD%A2)
-    - [強制リセット](#%E5%BC%B7%E5%88%B6%E3%83%AA%E3%82%BB%E3%83%83%E3%83%88)
-  - [Mininet CLI](#mininet-cli)
-    - [Mininet 固有のコマンド・操作](#mininet-%E5%9B%BA%E6%9C%89%E3%81%AE%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E3%83%BB%E6%93%8D%E4%BD%9C)
-    - [コンテナ shell でのコマンド実行](#%E3%82%B3%E3%83%B3%E3%83%86%E3%83%8A-shell-%E3%81%A7%E3%81%AE%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E5%AE%9F%E8%A1%8C)
-  - [演習ネットワーク中ノードでのコマンド実行](#%E6%BC%94%E7%BF%92%E3%83%8D%E3%83%83%E3%83%88%E3%83%AF%E3%83%BC%E3%82%AF%E4%B8%AD%E3%83%8E%E3%83%BC%E3%83%89%E3%81%A7%E3%81%AE%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E5%AE%9F%E8%A1%8C)
-    - [参考](#%E5%8F%82%E8%80%83)
-    - [ノード内のプロセス確認・停止](#%E3%83%8E%E3%83%BC%E3%83%89%E5%86%85%E3%81%AE%E3%83%97%E3%83%AD%E3%82%BB%E3%82%B9%E7%A2%BA%E8%AA%8D%E3%83%BB%E5%81%9C%E6%AD%A2)
-    - [通信確認](#%E9%80%9A%E4%BF%A1%E7%A2%BA%E8%AA%8D)
-    - [通信設定 インタフェース操作](#%E9%80%9A%E4%BF%A1%E8%A8%AD%E5%AE%9A-%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%95%E3%82%A7%E3%83%BC%E3%82%B9%E6%93%8D%E4%BD%9C)
-    - [通信設定 L2-L3テーブル操作](#%E9%80%9A%E4%BF%A1%E8%A8%AD%E5%AE%9A-l2-l3%E3%83%86%E3%83%BC%E3%83%96%E3%83%AB%E6%93%8D%E4%BD%9C)
-    - [通信設定 L4パケットフィルタ操作](#%E9%80%9A%E4%BF%A1%E8%A8%AD%E5%AE%9A-l4%E3%83%91%E3%82%B1%E3%83%83%E3%83%88%E3%83%95%E3%82%A3%E3%83%AB%E3%82%BF%E6%93%8D%E4%BD%9C)
-  - [スイッチ基本操作](#%E3%82%B9%E3%82%A4%E3%83%83%E3%83%81%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C)
-  - [複数ノード操作](#%E8%A4%87%E6%95%B0%E3%83%8E%E3%83%BC%E3%83%89%E6%93%8D%E4%BD%9C)
-    - [optional 直接アクセス/ウィンドウシステムがある場合](#optional-%E7%9B%B4%E6%8E%A5%E3%82%A2%E3%82%AF%E3%82%BB%E3%82%B9%E3%82%A6%E3%82%A3%E3%83%B3%E3%83%89%E3%82%A6%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0%E3%81%8C%E3%81%82%E3%82%8B%E5%A0%B4%E5%90%88)
-    - [ブラウザアクセス/ウィンドウシステムがない場合](#%E3%83%96%E3%83%A9%E3%82%A6%E3%82%B6%E3%82%A2%E3%82%AF%E3%82%BB%E3%82%B9%E3%82%A6%E3%82%A3%E3%83%B3%E3%83%89%E3%82%A6%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0%E3%81%8C%E3%81%AA%E3%81%84%E5%A0%B4%E5%90%88)
-  - [コマンド実行のコンテキストのまとめ](#%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E5%AE%9F%E8%A1%8C%E3%81%AE%E3%82%B3%E3%83%B3%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88%E3%81%AE%E3%81%BE%E3%81%A8%E3%82%81)
-
-<!-- /TOC -->
-
 # コマンドリスト
 
-:warning: 演習コンテナ内での操作はすべて root 権限になっているので注意してください。
+> **Warning**
+> 演習コンテナ内での操作はすべて root 権限になっているので削除や変更(書き換え)操作時には注意してください。
 
 ## 演習コンテナ操作
 
@@ -159,7 +133,10 @@ mininet> ノード名 コマンド
 
 - `ps -Ho pid,args` (`-H`: process hierarchy, `-o format`: user defined format. see: `man ps`)
   - 長いコマンドが途中で切られてしまう場合、 `--width NN` で横幅を指定してください。
-  - :warning: mininet で作成した仮想ノードは、プロセス空間が分離されていないので、`ps -e` などでは全ノードのプロセスが見えます。
+
+> **Important**
+> mininet で作成した仮想ノードは、プロセス空間が分離されていないので、`ps -e` などでは全ノードのプロセスが見えます。
+
 - `kill プロセスID`
   - プロセスの停止
 ### 通信確認
@@ -174,9 +151,11 @@ mininet> ノード名 コマンド
   - どのポートで listen しているかを表示する
 - `tcpdump`
   - パケットキャプチャを取得する (多数のオプションがあるので別途検索してください)
-  - :warning: 標準出力へのバッファを行単位にしてリアルタイムに状況が確認するため `-l` オプションを指定してください
   - `-e` : Layer2 の送信元・送信先情報を表示します
   - `-I インタフェース名` : 指定したインタフェースで送受信しているパケットのみキャプチャします
+
+> **Important**
+> `tcpdump` 使用時はリアルタイムに状況を確認するため `-l` オプションを指定してください (標準出力をバッファリングしない)
 
 ### 通信設定 (インタフェース操作)
 
@@ -250,7 +229,7 @@ mininet> sa ip -d link show sa-eth0.10
   - [Open vSwitch 2.15.90 Documentation](https://www.openvswitch.org/support/dist-docs/)
     - OSDB Schema (図): http://www.openvswitch.org//ovs-vswitchd.conf.db.5.pdf
     - [ovs-vsctl](https://www.openvswitch.org/support/dist-docs/ovs-vsctl.8.txt)
-    - [ovs-dpctl](http://www.openvswitch.org/support/dist-docs/ovs-dpctl.8.txt)
+    - [ovs-ofctl](http://www.openvswitch.org/support/dist-docs/ovs-ofctl.8.txt)
     - [ovs-appctl](https://www.openvswitch.org/support/dist-docs/ovs-appctl.8.txt)
 - スイッチの設定情報確認
   - `ovs-vsctl show`
@@ -268,7 +247,7 @@ mininet> sa ip -d link show sa-eth0.10
 - スイッチの MAC アドレステーブルの消去
   - `ovs-appctl fdb/flush [スイッチ名]`
 - ポート名とポート番号の確認
-  - `ovs-dpctl show`
+  - `ovs-ofctl show [スイッチ名]`
   - `ovs-vsctl --columns=name,ofport list Interface [ポート名]`
 - ポート (インタフェース) の状態確認
   - `ovs-vsctl list Port [ポート名]`

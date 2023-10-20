@@ -4,15 +4,6 @@ Previous << [Index](../index.md) >> [Next](../l2nw1/answer.md)
 ---
 <!-- /HEADER -->
 
-<!-- TOC -->
-
-- [L2NW-1 問題編](#l2nw-1-%E5%95%8F%E9%A1%8C%E7%B7%A8)
-  - [前置き](#%E5%89%8D%E7%BD%AE%E3%81%8D)
-  - [構成図](#%E6%A7%8B%E6%88%90%E5%9B%B3)
-  - [問題1](#%E5%95%8F%E9%A1%8C1)
-
-<!-- /TOC -->
-
 # L2NW-1 (問題編)
 
 ## 前置き
@@ -52,7 +43,7 @@ Previous << [Index](../index.md) >> [Next](../l2nw1/answer.md)
   * スイッチ・ポートの設定確認
     * `ovs-vsctl show`
   * インタフェース名とポート番号の対応確認
-    * `ovs-dpctl show`
+    * `ovs-ofctl show スイッチ名`
 * スイッチの状態確認
   * MAC アドレステーブル確認
     * `ovs-appctl sh ovs-appctl fdb/show スイッチ名`

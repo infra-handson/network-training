@@ -4,17 +4,6 @@
 ---
 <!-- /HEADER -->
 
-<!-- TOC -->
-
-- [L2NW-2 問題編](#l2nw-2-%E5%95%8F%E9%A1%8C%E7%B7%A8)
-  - [前置き](#%E5%89%8D%E7%BD%AE%E3%81%8D)
-  - [構成図](#%E6%A7%8B%E6%88%90%E5%9B%B3)
-  - [問題1](#%E5%95%8F%E9%A1%8C1)
-  - [問題2](#%E5%95%8F%E9%A1%8C2)
-  - [問題3](#%E5%95%8F%E9%A1%8C3)
-
-<!-- /TOC -->
-
 # L2NW-2 (問題編)
 
 ## 前置き
@@ -58,7 +47,7 @@
   * スイッチ・ポートの設定確認
     * `ovs-vsctl show`
   * インタフェース名とポート番号の対応確認
-    * `ovs-dpctl show`
+    * `ovs-ofctl show スイッチ名`
 * スイッチの状態確認
   * MAC アドレステーブル確認
     * `ovs-appctl fdb/show スイッチ名`
@@ -90,7 +79,7 @@
 * Host.B → Host.D へ ping を送信したときのパケットの経路を、通過するインタフェース(リンク) 単位ですべて列挙してください。
   * hb-eth0 → sw2-eth2 → ... → sw2-eth3 → hd-eth0
 * question a/b で、各スイッチおよびルータの設定の違いを説明してください。
-  * :bulb: VLAN access port, VLAN trunk port, Linux サブインタフェース (Router.A)
+  * キーワード: VLAN access port, VLAN trunk port, Linux サブインタフェース (Router.A)
   * JSON ファイルを見てもわかりますが、できればそれぞれの環境でスイッチの設定やポートの状態を確認して考えてみてください。
 
 ## 問題3
