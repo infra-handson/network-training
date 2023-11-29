@@ -28,7 +28,7 @@
 
 <details>
 
-<summary>この問題で使用するコマンド :</summary>
+<summary>:bulb: この問題で使用するコマンド :</summary>
 
 * インタフェースの一覧表示・設定確認・設定変更
   * IP アドレス一の確認
