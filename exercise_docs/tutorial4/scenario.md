@@ -380,105 +380,7 @@ ha-eth0 について以下のようになっています。
 
 これは Linux で 1 つの物理ポートに複数の IP アドレスを設定する際に使用される機能で、**サブインタフェース** と呼ばれます。
 Host.A はこのサブインタフェースを使って trunk port を実現しています。そのため、Switch.1-2 間と同じ形で Switch.1-Host.A 間を接続できています。
-
-### (補足) サブインタフェースについて
-
-:customs: サブインタフェースの命名ルール:
-
-* 演習中でサブインタフェースを使用する場合、以下のルールでインタフェース名が設定されています。
-  * 物理インタフェース : "ホスト名 - ethX"
-  * サブインタフェース : "物理インタフェース名 **.** VLAN-ID" (ホスト名-ethX.N)
-
-サブインタフェースの特徴:
-* サブインタフェースは、親(物理)インタフェースの設定を受け継ぎません。独立したインタフェースとして設定されます。
-* サブインタフェースは論理的なインタフェースで、物理インタフェースと同等に扱えます。物理インタフェースとの "親子関係" や、VLAN ID 設定についてはオプションを指定して情報表示することで確認できます。
-
-### (補足) インタフェースのVLAN設定確認
-
-<details>
-
-<summary>インタフェースのVLAN設定確認</summary>
-
-演習ネットワークではインタフェース名で VLAN ID がわかるようにしてありますが、実際の設定も確認してみましょう。
-
-(Mininet ターミナル) サブインタフェースの詳細情報表示
-
-```text
-mininet> ha ip -d link show ha-eth0.10
-3: ha-eth0.10@ha-eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP mode DEFAULT group default qlen 1000
-    link/ether 00:00:5e:00:53:a1 brd ff:ff:ff:ff:ff:ff promiscuity 0 minmtu 0 maxmtu 65535 
-    ❹vlan protocol 802.1Q ❺id 10 <REORDER_HDR> addrgenmode eui64 numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 
-```
-
-ha-eth0.10 について、❹ VLAN のプロトコルとして 802.1Q を使用していること、❺ VLAN ID が 10 であることがわかります。
-
-ノードが持つ VLAN 一覧を確認したい場合は以下のように `/proc/net/vlan/config` を参照してください。(参照: [linux - listing parent interface of a vlan - Server Fault](https://serverfault.com/questions/882754/listing-parent-interface-of-a-vlan))
-
-```text
-mininet> ha cat /proc/net/vlan/config
-VLAN Dev name    | VLAN ID
-Name-Type: VLAN_NAME_TYPE_RAW_PLUS_VID_NO_PAD
-ha-eth0.10     | 10  | ha-eth0
-ha-eth0.20     | 20  | ha-eth0
-```
-
-</details>
-
-### (補足) インタフェース・サブインタフェースの依存関係の確認
-
-<details>
-
-<summary>インタフェース・サブインタフェースの依存関係の確認</summary>
-
-`/proc/net/vlan/インタフェース名` を参照すると VLAN に関する詳細情報が確認できます。❺ VLAN ID だけでなく、サブインタフェースに対する ❶ 親インタフェースの情報も含まれます。
-
-```sh
-ha cat /proc/net/vlan/ha-eth0.10
-```
-```text
-mininet> ha cat /proc/net/vlan/ha-eth0.10
-ha-eth0.10  ❺VID: 10    REORDER_HDR: 1  dev->priv_flags: 1021
-         total frames received            9
-          total bytes received          560
-      Broadcast/Multicast Rcvd            9
-
-      total frames transmitted           12
-       total bytes transmitted          956
-Device: ❶ha-eth0
-INGRESS priority mappings: 0:0  1:0  2:0  3:0  4:0  5:0  6:0 7:0
- EGRESS priority mappings: 
-```
-
-他にも、インタフェース・サブインタフェースの親子関係は以下のように確認できます。(参照: [linux - listing parent interface of a vlan - Server Fault](https://serverfault.com/questions/882754/listing-parent-interface-of-a-vlan))
-
-```text
-mininet> ha readlink /sys/class/net/ha-eth0/upper* | xargs basename -a
-ha-eth0.10
-ha-eth0.20
-mininet> ha readlink /sys/class/net/ha-eth0.10/lower* | xargs basename -a
-ha-eth0
-mininet> ha readlink /sys/class/net/ha-eth0.20/lower* | xargs basename -a
-ha-eth0
-```
-
-</details>
-
-### (補足) VLANアクセスポートとトランクポート
-
-<details>
-
-<summary>VLANアクセスポートとトランクポート</summary>
-
-チュートリアル 4b における Switch.2-Host.B/C 間の接続において、Host.B/C は VLAN についての情報を持ちません。Host.B/C は VLAN ヘッダのない (通常の) パケットを送信します。スイッチは受け取ったときに、受け取ったポートの `tag` 設定にそって、そのパケットがどの L2 セグメント宛てに送られたものかを判断します。スイッチからホストに送信する際も同様で、VLAN ID をもとにどのセグメント宛か判断し、Host.B/C 宛に出力する際は VLAN ヘッダを外してから送信します。
-
-このようなポートのことを **VLAN access port** と呼びます。
-
-|                 | Access port | Trunk port |
-|-----------------|-------------|------------|
-| VLAN ヘッダ     | つかない    | つく       |
-| VLANへの関連付け| 1-VLAN      | 複数 VLAN  |
-
-</details>
+(サブインタフェースの技術的な詳細については [補足: サブインタフェースについて](#%E8%A3%9C%E8%B6%B3-%E3%82%B5%E3%83%96%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%95%E3%82%A7%E3%83%BC%E3%82%B9%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6) を参照してください。)
 
 ### ノード間通信確認
 
@@ -598,6 +500,110 @@ root@nwtraining01:/# ovs-appctl fdb/show sw1
     1    20  00:00:5e:00:53:a2   40    ... ❷ ha-eth0.20
     2    20  00:00:5e:00:53:0c    7
 ```
+
+## 補足: サブインタフェースについて
+
+> [!NOTE]
+> 以降は技術面での補足情報です。サブインタフェースとVLAN設定まわりについて確認したいときに参照してください。
+
+### サブインタフェースについて
+
+:customs: サブインタフェースの命名ルール:
+
+* 演習中でサブインタフェースを使用する場合、以下のルールでインタフェース名が設定されています。
+  * 物理インタフェース : "ホスト名 - ethX"
+  * サブインタフェース : "物理インタフェース名 **.** VLAN-ID" (ホスト名-ethX.N)
+
+サブインタフェースの特徴:
+* サブインタフェースは、親(物理)インタフェースの設定を受け継ぎません。独立したインタフェースとして設定されます。
+* サブインタフェースは論理的なインタフェースで、物理インタフェースと同等に扱えます。物理インタフェースとの "親子関係" や、VLAN ID 設定についてはオプションを指定して情報表示することで確認できます。
+
+### インタフェースのVLAN設定確認
+
+<details>
+
+<summary>インタフェースのVLAN設定確認</summary>
+
+演習ネットワークではインタフェース名で VLAN ID がわかるようにしてありますが、実際の設定も確認してみましょう。
+
+(Mininet ターミナル) サブインタフェースの詳細情報表示
+
+```text
+mininet> ha ip -d link show ha-eth0.10
+3: ha-eth0.10@ha-eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP mode DEFAULT group default qlen 1000
+    link/ether 00:00:5e:00:53:a1 brd ff:ff:ff:ff:ff:ff promiscuity 0 minmtu 0 maxmtu 65535 
+    ❹vlan protocol 802.1Q ❺id 10 <REORDER_HDR> addrgenmode eui64 numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 
+```
+
+ha-eth0.10 について、❹ VLAN のプロトコルとして 802.1Q を使用していること、❺ VLAN ID が 10 であることがわかります。
+
+ノードが持つ VLAN 一覧を確認したい場合は以下のように `/proc/net/vlan/config` を参照してください。(参照: [linux - listing parent interface of a vlan - Server Fault](https://serverfault.com/questions/882754/listing-parent-interface-of-a-vlan))
+
+```text
+mininet> ha cat /proc/net/vlan/config
+VLAN Dev name    | VLAN ID
+Name-Type: VLAN_NAME_TYPE_RAW_PLUS_VID_NO_PAD
+ha-eth0.10     | 10  | ha-eth0
+ha-eth0.20     | 20  | ha-eth0
+```
+
+</details>
+
+### インタフェース・サブインタフェースの依存関係の確認
+
+<details>
+
+<summary>インタフェース・サブインタフェースの依存関係の確認</summary>
+
+`/proc/net/vlan/インタフェース名` を参照すると VLAN に関する詳細情報が確認できます。❺ VLAN ID だけでなく、サブインタフェースに対する ❶ 親インタフェースの情報も含まれます。
+
+```sh
+ha cat /proc/net/vlan/ha-eth0.10
+```
+```text
+mininet> ha cat /proc/net/vlan/ha-eth0.10
+ha-eth0.10  ❺VID: 10    REORDER_HDR: 1  dev->priv_flags: 1021
+         total frames received            9
+          total bytes received          560
+      Broadcast/Multicast Rcvd            9
+
+      total frames transmitted           12
+       total bytes transmitted          956
+Device: ❶ha-eth0
+INGRESS priority mappings: 0:0  1:0  2:0  3:0  4:0  5:0  6:0 7:0
+ EGRESS priority mappings: 
+```
+
+他にも、インタフェース・サブインタフェースの親子関係は以下のように確認できます。(参照: [linux - listing parent interface of a vlan - Server Fault](https://serverfault.com/questions/882754/listing-parent-interface-of-a-vlan))
+
+```text
+mininet> ha readlink /sys/class/net/ha-eth0/upper* | xargs basename -a
+ha-eth0.10
+ha-eth0.20
+mininet> ha readlink /sys/class/net/ha-eth0.10/lower* | xargs basename -a
+ha-eth0
+mininet> ha readlink /sys/class/net/ha-eth0.20/lower* | xargs basename -a
+ha-eth0
+```
+
+</details>
+
+### VLANアクセスポートとトランクポート
+
+<details>
+
+<summary>VLANアクセスポートとトランクポート</summary>
+
+チュートリアル 4b における Switch.2-Host.B/C 間の接続において、Host.B/C は VLAN についての情報を持ちません。Host.B/C は VLAN ヘッダのない (通常の) パケットを送信します。スイッチは受け取ったときに、受け取ったポートの `tag` 設定にそって、そのパケットがどの L2 セグメント宛てに送られたものかを判断します。スイッチからホストに送信する際も同様で、VLAN ID をもとにどのセグメント宛か判断し、Host.B/C 宛に出力する際は VLAN ヘッダを外してから送信します。
+
+このようなポートのことを **VLAN access port** と呼びます。
+
+|                 | Access port | Trunk port |
+|-----------------|-------------|------------|
+| VLAN ヘッダ     | つかない    | つく       |
+| VLANへの関連付け| 1-VLAN      | 複数 VLAN  |
+
+</details>
 
 ## チュートリアル4のまとめ
 
