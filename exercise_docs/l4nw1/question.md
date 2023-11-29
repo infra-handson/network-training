@@ -23,7 +23,7 @@
 
 <details>
 
-<summary>この問題で使用するコマンド :</summary>
+<summary>:bulb: この問題で使用するコマンド :</summary>
 
 * インタフェースの一覧表示・設定確認
   * IP アドレス一の確認
@@ -61,7 +61,7 @@
 * Server.A1/A2 では Web サーバが 8080/tcp で起動しています。
   * アクセスすると、サーバ名をアスキーアートで表示します。
 
-> **Note**
+> [!NOTE]
 > [http.server --- HTTP サーバ — Python 3.9.4 ドキュメント](https://docs.python.org/ja/3/library/http.server.html)
 
 ## 問題1

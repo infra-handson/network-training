@@ -190,7 +190,7 @@ Mininet CLI では同時に 1 つのノードしか操作できないため、�
 
 以下の順序で操作します。
 
-> **Important**
+> [!IMPORTANT]
 > `tcpdump` コマンドは `-l` オプション (Make stdout line buffered) がないと出力がバッファリングされてリアルタイムに表示されません。
 
 1. Shell ターミナルで `ip netns exec hb tcpdump -l -i hb-eth0` コマンドを実行して通信が実行されていることを確認してください。

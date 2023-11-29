@@ -85,7 +85,7 @@ FORWARD chain のルールについて:
 - ❸ 任意の送信元・送信先について、TCP セッションが確立したパケット (`state RELATED,ESTABLISHED`) は許可する
 - 上記いずれにもマッチしないものはデフォルトのポリシに従う : いま `policy DROP` なのでマッチしないものは拒否(パケット破棄)
 
-> **Note**
+> [!NOTE]
 > `state RELATED,ESTABLISHED` について:
 > * L3 の通信でもそうだったように、L4 パケットフィルタを考える際にも方向(行き・帰り)の考え方が必要になります。この観点では、上のパケットフィルタルールは、http の "行き" はあるものの "帰り" がないように見ます。`state RELATED,ESTABLISHED` はこの "帰り" のルールに相当します。
 >   - Firewall は、やり取りされる通信 (TCP) の状態を見て許可するかどうかを決定しています (**Stateful inspection**)
@@ -324,10 +324,10 @@ num   pkts bytes target     prot opt in     out     source               destina
 
 Docker ホスト側 (演習コンテナ外) の `~/network-training/exercise` ディレクトリに、チュートリアル・演習用の素材があります。
 
-> **Note**
+> [!NOTE]
 > :customs: Docker ホスト側の `~/network-training/exercise` をコンテナ内 `/exercise` にマウントしています。コンテナ内から見える `/exercise` と ホスト側の `~/network-training/exercise` は同じディレクトリです。
 
-> **Warning**
+> [!WARNING]
 > ローカルファイルをマウントしているので、変更したファイルは残ります。オリジナルのファイルを直接編集せず、いったん作業用にファイルをコピーしてください。(元のファイルを取っておいて初期状態に戻せるようする。)
 
 (Shell ターミナル) 作業用ファイルのコピー
@@ -339,7 +339,7 @@ cp fa_fw.sh fa_fw_mod.sh
 
 Code-server 利用時は、code-server から直接編集できます。
 
-> **Warning**
+> [!WARNING]
 > code-server のファイルの自動保存機能は有効にしていないので、 `Ctrl-s` で明示的にファイルを保存してください。
 
 ![Edit script with code-server](csvr_edit.png)

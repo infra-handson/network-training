@@ -63,7 +63,7 @@ No.3 (Host.A → Host.D) についても途中までは同様です。
 
 No.3 動作については、Host.D → Host.A へ ping してみてください。Host.D から見ると別なサブネットに見えるため "Network is unreachable" となります。Host.A 視点・Host.D 視点でそれぞれ相手の見え方 (同じサブネットにいるように見えるか) が異なるため、通信できません。
 
-> **Note**
+> [!NOTE]
 > No.3 について: Linux は ARP 応答する際にルーティングテーブルを参照して、ARP リクエスト送信元が解決するかなどをチェックしています。そのため、デフォルトルート等の有無によっても動作が変わったりもします。(参考: [Linux ARP応答のコーナーケースを攻める - Qiita](https://qiita.com/corestate55/items/ee67ccf2989111e5dc4f))
 
 ## まとめ
