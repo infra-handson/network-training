@@ -8,7 +8,7 @@
 
 ## 前置き
 
-> **Note**
+> [!NOTE]
 > App-2 は __机上検討のみ__ です。ハンズオンはありません。
 
 * [L3NW-2](../l3nw2/question.md) L3 基礎
@@ -53,7 +53,7 @@ T 社は A 社と合併することになりました。それにともなって
 * A 社関西支社から X 社 Web サーバへの `traceroute` を実行すると、A 社台湾支社のルータから応答があります。
 * T 社内から X 社 Web サーバへの `traceroute` はインターネット経由での経路情報が返ってきます。
 
-> **Note**
+> [!NOTE]
 > [AS21928 T-Mobile USA, Inc. - bgp.he.net](https://bgp.he.net/AS21928#_prefixes)
 
 <!-- FOOTER -->

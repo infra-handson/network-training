@@ -138,7 +138,7 @@ npx md-to-pdf --config-file .md2pdf.js exercise_docs/**/*.md
 
 演習ネットワーク定義ファイルのデータ構造
 
-> **Warning**
+> [!WARNING]
 > * インタフェース名 (veth) については使えない文字・最大長(15 文字)制限があります
 > * リンク端点 (tp: termination-point) に sub-interface は指定できません
 
@@ -225,7 +225,7 @@ npx md-to-pdf --config-file .md2pdf.js exercise_docs/**/*.md
 
 ## TODO
 
-> **Important**
+> [!IMPORTANT]
 > IPv6 には対応していません
 
 <!-- FOOTER -->

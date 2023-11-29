@@ -8,7 +8,7 @@ Previous << [README](/README.md) >> [Next](../common/make_exercise.md)
 
 ## システム構成
 
-> **Warning**
+> [!WARNING]
 > [2021-08-16]構成上の問題点; 1-VM : N-Container 構成の場合、特定の問題を複数コンテナ内部で起動した際に問題がおきる。
 > * コンテナ内部で mininet が作成した veth インタフェースはホスト側 OS で作成されている。複数コンテナで同じ演習ネットワークを起動しようとすると、同名のインタフェースを作ろうとしてエラーになる。
 >   * コンテナ内部で mininet が作成する論理ネットワークリソースは Linux OS 側で用意するもの。コンテナは OS の機能についてはコンテナホスト側の機能を使用している。そのため別コンテナであっても OS 側で同じリソースを複数作ろうとする状況が起きると競合が発生してしまう。
@@ -178,7 +178,7 @@ cd network-training
 
 ## Composeファイルのバージョンと警告メッセージ
 
-> **Warning**
+> [!WARNING]
 > docker-compose でマルチステージビルドによる使い分けをするため、compose ファイルのバージョンを 3 系に変更しました。その際、CPU/Memory の上限設定を `deploy` セクションの内容に置き換えています。これは swarm mode のときに使用されるものなので、通常の docker-compose では `--compatibility` オプションをつけて実行する必要があります。(参照: [Compatibility Mode | Compose file versions and upgrading | Docker Documentation](https://docs.docker.com/compose/compose-file/compose-versioning/#compatibility-mode))
 
 ```text
@@ -238,7 +238,7 @@ docker push ghcr.io/infra-handson/network-training:latest
 
 <summary>Obsoleted (for Gitlab)</summary>
 
-> **Warning**
+> [!WARNING]
 > 二要素認証 (2FA) 有効にしている場合は `read_registry`+`write_registry` 権限をもつアクセストークンでログインが必要。
 
 - ref: [Gitlabの2段階認証下でコンテナレジストリにPushする方法 | codit](https://www.codit.work/notes/p8deveys7r07s5nmwfa8/)
@@ -257,10 +257,10 @@ docker push registry.gitlab.com/corestate55/network_practice:latest
 
 ## 演習コンテナを起動する
 
-> **Warning**
+> [!WARNING]
 > docker-compose で `--compatibility` オプションがない場合、警告メッセージ `WARNING: Some services (lab) use the 'deploy' key, which will be ignored. Compose does not support 'deploy' configuration` が表示されます。コンテナ起動時にこのメッセージが表示されている場合、CPU/Memory 上限設定が無視されているので、いったん止めてからオプションをつけて再起動させてください。
 
-> **Warning**
+> [!WARNING]
 > セキュリティ面の注意事項
 > * 演習コンテナは特権モードで起動します。(compose ファイル内のオプションで指定してあります)。コンテナが特権モードで動く (コンテナ内では root が使える) ため、不正利用された場合に機能制限ができません。
 

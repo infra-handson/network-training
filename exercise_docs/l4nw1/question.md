@@ -61,7 +61,7 @@
 * Server.A1/A2 では Web サーバが 8080/tcp で起動しています。
   * アクセスすると、サーバ名をアスキーアートで表示します。
 
-> **Note**
+> [!NOTE]
 > [http.server --- HTTP サーバ — Python 3.9.4 ドキュメント](https://docs.python.org/ja/3/library/http.server.html)
 
 ## 問題1

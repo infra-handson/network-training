@@ -6,7 +6,7 @@ Previous << [Index](../index.md) >> [Next](../common/glossary.md)
 
 # コマンドリスト
 
-> **Warning**
+> [!WARNING]
 > 演習コンテナ内での操作はすべて root 権限になっているので削除や変更(書き換え)操作時には注意してください。
 
 ## 演習コンテナ操作
@@ -134,7 +134,7 @@ mininet> ノード名 コマンド
 - `ps -Ho pid,args` (`-H`: process hierarchy, `-o format`: user defined format. see: `man ps`)
   - 長いコマンドが途中で切られてしまう場合、 `--width NN` で横幅を指定してください。
 
-> **Important**
+> [!IMPORTANT]
 > mininet で作成した仮想ノードは、プロセス空間が分離されていないので、`ps -e` などでは全ノードのプロセスが見えます。
 
 - `kill プロセスID`
@@ -154,7 +154,7 @@ mininet> ノード名 コマンド
   - `-e` : Layer2 の送信元・送信先情報を表示します
   - `-I インタフェース名` : 指定したインタフェースで送受信しているパケットのみキャプチャします
 
-> **Important**
+> [!IMPORTANT]
 > `tcpdump` 使用時はリアルタイムに状況を確認するため `-l` オプションを指定してください (標準出力をバッファリングしない)
 
 ### 通信設定 (インタフェース操作)
